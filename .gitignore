@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Next.js
+.next/
+out/
+
+# Build artifacts
+/dist/
+/build/
+
+# Env files
+.env
+.env.*
+
+# VS Code
+.vscode/
+
+# Misc
+*.log

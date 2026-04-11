@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumiere IoT - Nocturne Protocol</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary": "#4ae176",
+                        "surface-container-high": "#222a3d",
+                        "on-surface": "#dae2fd",
+                        "outline-variant": "#424754",
+                        "tertiary-container": "#ca8100",
+                        "on-secondary-fixed-variant": "#005321",
+                        "inverse-primary": "#005ac2",
+                        "secondary-container": "#00b954",
+                        "on-primary": "#002e6a",
+                        "primary-container": "#4d8eff",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-tertiary-container": "#3e2400",
+                        "on-background": "#dae2fd",
+                        "on-secondary-container": "#004119",
+                        "secondary-fixed-dim": "#4ae176",
+                        "surface-dim": "#0b1326",
+                        "on-tertiary": "#472a00",
+                        "primary": "#adc6ff",
+                        "on-error-container": "#ffdad6",
+                        "surface-bright": "#31394d",
+                        "outline": "#8c909f",
+                        "inverse-surface": "#dae2fd",
+                        "surface-variant": "#2d3449",
+                        "surface-tint": "#adc6ff",
+                        "tertiary": "#ffb95f",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface": "#0b1326",
+                        "inverse-on-surface": "#283044",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container-lowest": "#060e20",
+                        "background": "#0b1326",
+                        "surface-container": "#171f33",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary": "#003915",
+                        "on-primary-container": "#00285d",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container-low": "#131b2e",
+                        "secondary-fixed": "#6bff8f",
+                        "on-secondary-fixed": "#002109",
+                        "on-primary-fixed": "#001a42",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-error": "#690005",
+                        "surface-container-highest": "#2d3449",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#ffddb8"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+        }
+        .glass-panel {
+            background: rgba(45, 52, 73, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .status-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .4; }
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-primary-container/30">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen py-6 px-4 gap-4 bg-[#131b2e] w-64 fixed left-0 top-0 z-50">
+<div class="flex items-center gap-3 px-2 mb-4">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary">pest_control</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-[#adc6ff] font-headline tracking-tighter">Nocturne Protocol</h1>
+<p class="text-xs text-slate-400 font-manrope">IoT Control Center</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-[#adc6ff] font-bold bg-[#171f33] rounded-lg transition-all duration-200 translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-manrope text-sm">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:bg-[#2d3449] hover:text-white rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-manrope text-sm">Floor Map</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:bg-[#2d3449] hover:text-white rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+<span class="font-manrope text-sm">Sensor List</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:bg-[#2d3449] hover:text-white rounded-lg transition-all" href="/history" target="_top" rel="noopener">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-manrope text-sm">History</span>
+</a>
+</nav>
+<button class="mt-auto w-full py-3 px-4 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2 hover:opacity-90 transition-opacity" type="button" data-deploy-trigger="1">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+                Deploy New Trap
+            </button>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="flex-1 md:ml-64 min-w-0">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-6 h-16 bg-[#0b1326] sticky top-0 z-40">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-[#adc6ff] font-headline">Lumiere IoT</span>
+<div class="hidden lg:flex items-center gap-6">
+<a class="text-[#adc6ff] border-b-2 border-[#adc6ff] pb-1 font-manrope font-semibold text-sm" href="#">Live Status</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-slate-400 hover:bg-[#171f33] rounded-lg transition-colors" type="button" data-nav-route="notifications" aria-label="Notifications">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span id="notif-badge" class="hidden absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-error text-on-error text-[10px] font-black flex items-center justify-center">0</span>
+</button>
+<button class="p-2 text-slate-400 hover:bg-[#171f33] rounded-lg transition-colors material-symbols-outlined" data-icon="contrast">contrast</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="Close up portrait of a professional man with a friendly expression in a modern office environment with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDo2B8cN-hXtEx7_z0r18gf1rRE7e9eYQ17S3WrQ8ENKXybg6muaISzsH1MvmoDVZqHMNgg4dLF_GlQTNcM3nD5hxxxyaMDlRGwQcwJCLRKzgguPM-XHIrNRCLAknHmKVwFbn3C9hg0OQa1DlZYYr21jLJlyUy-ylfzOXItiPiHOqWozO39YmfoJt7VVjmbI0-ieYTiBZo-CwHfkHaXVGbGHE_HKHQryEK-3__8_d4LoE5FqWasRHQhhdTdiYJuP83865iyFf8Vyk"/>
+</div>
+</div>
+<div class="bg-[#131b2e] h-[1px] w-full absolute bottom-0 left-0"></div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
+<!-- Summary Bento Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-surface-container p-6 rounded-xl relative overflow-hidden group cursor-pointer" role="button" tabindex="0" data-nav-route="sensors">
+<div class="flex justify-between items-start mb-4">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest font-label">Active Traps</span>
+<span class="material-symbols-outlined text-secondary text-sm">check_circle</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h2 id="dash-stat-active" class="text-4xl font-black text-on-surface font-headline">0</h2>
+<span class="text-xs text-secondary">Online</span>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div id="dash-bar-active" class="h-full bg-secondary w-0"></div>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl relative overflow-hidden group border-b border-error/20 cursor-pointer" role="button" tabindex="0" data-nav-route="notifications">
+<div class="flex justify-between items-start mb-4">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest font-label">Triggered</span>
+<span class="material-symbols-outlined text-error text-sm status-pulse">warning</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h2 id="dash-stat-triggered" class="text-4xl font-black text-on-surface font-headline">00</h2>
+<span class="text-xs text-error">Alerts</span>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div id="dash-bar-triggered" class="h-full bg-error w-0"></div>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl relative overflow-hidden group cursor-pointer" role="button" tabindex="0" data-nav-route="sensors">
+<div class="flex justify-between items-start mb-4">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest font-label">Low Battery</span>
+<span class="material-symbols-outlined text-tertiary text-sm">battery_2_bar</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h2 id="dash-stat-low" class="text-4xl font-black text-on-surface font-headline">00</h2>
+<span class="text-xs text-tertiary">Unit</span>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div id="dash-bar-low" class="h-full bg-tertiary w-0"></div>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl relative overflow-hidden group cursor-pointer" role="button" tabindex="0" data-nav-route="sensors">
+<div class="flex justify-between items-start mb-4">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest font-label">Offline</span>
+<span class="material-symbols-outlined text-outline text-sm">signal_cellular_off</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h2 id="dash-stat-offline" class="text-4xl font-black text-on-surface font-headline">00</h2>
+<span class="text-xs text-slate-400">Perfect</span>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div id="dash-bar-offline" class="h-full bg-outline w-0"></div>
+</div>
+</div>
+</div>
+<!-- Main Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Efficiency Graph -->
+<div class="lg:col-span-2 bg-surface-container rounded-xl p-8">
+<div class="flex justify-between items-center mb-10">
+<div>
+<h3 class="text-xl font-bold font-headline">Efficiency Rate</h3>
+<p class="text-sm text-slate-400">Protocol performance last 7 days</p>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-xs font-medium text-primary">Daily</span>
+<span class="px-3 py-1 rounded-full text-xs font-medium text-slate-400">Weekly</span>
+</div>
+</div>
+<div id="dash-eff-bars" class="h-64 flex items-end gap-4 px-2">
+<div class="flex-1 flex flex-col items-center gap-4">
+<div class="w-full bg-primary/20 rounded-t-lg transition-all duration-700 h-[65%] group relative" data-eff-bar>
+<div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="text-[10px] uppercase tracking-tighter text-slate-500 font-bold" data-eff-label>Mon</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-4">
+<div class="w-full bg-primary/20 rounded-t-lg transition-all duration-700 h-[82%] group relative" data-eff-bar>
+<div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="text-[10px] uppercase tracking-tighter text-slate-500 font-bold" data-eff-label>Tue</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-4">
+<div class="w-full bg-primary/20 rounded-t-lg transition-all duration-700 h-[45%] group relative" data-eff-bar>
+<div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="text-[10px] uppercase tracking-tighter text-slate-500 font-bold" data-eff-label>Wed</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-4">
+<div class="w-full bg-primary/20 rounded-t-lg transition-all duration-700 h-[91%] group relative" data-eff-bar>
+<div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="text-[10px] uppercase tracking-tighter text-slate-500 font-bold" data-eff-label>Thu</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-4">
+<div class="w-full bg-primary/20 rounded-t-lg transition-all duration-700 h-[74%] group relative" data-eff-bar>
+<div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="text-[10px] uppercase tracking-tighter text-slate-500 font-bold" data-eff-label>Fri</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-4">
+<div class="w-full bg-primary/20 rounded-t-lg transition-all duration-700 h-[60%] group relative" data-eff-bar>
+<div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="text-[10px] uppercase tracking-tighter text-slate-500 font-bold" data-eff-label>Sat</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-4">
+<div class="w-full bg-primary/60 rounded-t-lg transition-all duration-700 h-[88%] group relative shadow-[0_0_20px_rgba(173,198,255,0.3)]" data-eff-bar>
+<div id="dash-eff-today" class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-container-highest px-2 py-1 rounded text-[10px] font-bold text-white whitespace-nowrap">Today</div>
+</div>
+<span class="text-[10px] uppercase tracking-tighter text-primary font-bold" data-eff-label>Sun</span>
+</div>
+</div>
+</div>
+<!-- Live Activity Widget -->
+<div class="bg-surface-container rounded-xl overflow-hidden flex flex-col">
+<div class="p-6 border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="font-bold font-headline">Live Activity</h3>
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary status-pulse"></span>
+<span class="text-[10px] uppercase font-bold text-slate-400">Real-time</span>
+</span>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-3 max-h-[380px]" id="activity-feed">
+<!-- Activity Item -->
+<div class="flex gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="w-10 h-10 shrink-0 rounded-full bg-error/10 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-base">capture</span>
+</div>
+<div class="min-w-0">
+<p class="text-sm font-semibold">Trap #104 Triggered</p>
+<p class="text-xs text-slate-500">Service Area B • 2 mins ago</p>
+</div>
+</div>
+<div class="flex gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="w-10 h-10 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-base">refresh</span>
+</div>
+<div class="min-w-0">
+<p class="text-sm font-semibold">System Diagnostics</p>
+<p class="text-xs text-slate-500">All sensors calibrated • 14 mins ago</p>
+</div>
+</div>
+<div class="flex gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="w-10 h-10 shrink-0 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-base">battery_low</span>
+</div>
+<div class="min-w-0">
+<p class="text-sm font-semibold">Battery Low Alert</p>
+<p class="text-xs text-slate-500">Trap #042 Kitchen • 45 mins ago</p>
+</div>
+</div>
+<div class="flex gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="w-10 h-10 shrink-0 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-base">done_all</span>
+</div>
+<div class="min-w-0">
+<p class="text-sm font-semibold">Maintenance Complete</p>
+<p class="text-xs text-slate-500">Floor 3 East Wing • 1 hr ago</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Mini Map Preview -->
+<div class="lg:col-span-3 bg-surface-container rounded-xl overflow-hidden flex flex-col md:flex-row min-h-[400px]">
+<div class="p-8 md:w-1/3 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<h3 class="text-xl font-bold font-headline">Floor Map</h3>
+</div>
+<p class="text-sm text-slate-400 mb-6 leading-relaxed">
+                                    Visual tracking of all IoT nodes across the West Wing. 
+                                    High density detected in primary corridor exit points.
+                                </p>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low">
+<span class="text-xs font-semibold text-slate-300">Kitchen Corridor</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-error-container text-on-error-container">Critical</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low">
+<span class="text-xs font-semibold text-slate-300">Storage Room 4</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-secondary-container text-on-secondary-container">Stable</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low">
+<span class="text-xs font-semibold text-slate-300">Dining Hall A</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-secondary-container text-on-secondary-container">Stable</span>
+</div>
+</div>
+</div>
+<button class="mt-8 text-sm font-bold text-primary flex items-center gap-2 hover:underline" type="button" data-nav-route="map">
+                                Expand Map View <span class="material-symbols-outlined text-sm">open_in_full</span>
+</button>
+</div>
+<div id="dash-map-preview" class="relative flex-1 bg-surface-container-lowest overflow-hidden group">
+<div class="absolute inset-0 opacity-40 mix-blend-luminosity">
+<img id="dash-floor-map" alt="Floor Map" class="w-full h-full object-cover" data-alt="Monochromatic blueprint floor plan of a high-end commercial building with clean architectural lines and technical annotations" data-location="New York" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjDJyb7-GZMDCT3GIHvpgkjEttxcQAOERe8-Y0qGAs9qJKRhxQkc1bniqY5GxVTk9HsO4MNEvEafgl_b-2JQyDtZVVLHwysqUodaoWGHMeH5pwOKDFbGiSGEQ3iYBk-rypj5CmWLMQmh4ahtBlg48CKfwVnDUaMhiMibqKvxsS4OtU3H2kZpmb0T6tTj9Kwaz_a3wj78zj6a6LK8XXGWLJjre89DgMQOy9-LPx1F7yCfR4bJoLeukXB6vKNnjBywxgRsIeR6DD0NY"/>
+</div>
+<div class="absolute top-4 left-4 glass-panel px-3 py-2 rounded-lg border border-outline-variant/10 text-[10px] text-white">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">layers</span>
+<span id="dash-floor-label" class="font-bold uppercase tracking-widest">Floor</span>
+</div>
+</div>
+<!-- Map Markers -->
+<div id="dash-markers-layer" class="absolute inset-0"></div>
+
+<!-- Hidden demo markers kept only so Tailwind CDN generates the needed classes -->
+<div class="hidden">
+    <div class="absolute top-[20%] left-[30%] w-3 h-3 rounded-full bg-secondary shadow-[0_0_10px_#4ae176]">
+        <div class="absolute inset-[-6px] rounded-full border border-secondary/30 animate-ping"></div>
+    </div>
+    <div class="absolute top-[45%] left-[55%] w-3 h-3 rounded-full bg-error shadow-[0_0_10px_#ffb4ab]">
+        <div class="absolute inset-[-6px] rounded-full border border-error/30 animate-ping"></div>
+    </div>
+    <div class="absolute top-[70%] left-[25%] w-3 h-3 rounded-full bg-secondary shadow-[0_0_10px_#4ae176]"></div>
+    <div class="absolute top-[35%] left-[80%] w-3 h-3 rounded-full bg-tertiary shadow-[0_0_10px_#ffb95f]"></div>
+</div>
+<div class="absolute bottom-4 right-4 glass-panel px-4 py-2 rounded-lg border border-outline-variant/10 text-[10px] text-white">
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span> Online</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-error"></span> Alert</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-tertiary"></span> Warning</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Floating Action for Mobile -->
+<button class="md:hidden fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary text-on-primary shadow-xl flex items-center justify-center z-50" type="button" data-deploy-trigger="1" aria-label="Deploy New Trap">
+<span class="material-symbols-outlined">add</span>
+</button>
+<script src="topbar.js"></script>
+<script src="deploy-modal.js"></script>
+<script>
+        (function () {
+            const safeJsonParse = (value, fallback) => {
+                try {
+                    if (!value) return fallback;
+                    return JSON.parse(value);
+                } catch {
+                    return fallback;
+                }
+            };
+
+            const escapeHtml = (input) =>
+                String(input ?? "")
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+
+            const formatRelativeTime = (iso) => {
+                const date = iso ? new Date(iso) : null;
+                if (!date || Number.isNaN(date.getTime())) return "";
+
+                const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+                if (seconds < 10) return "Just now";
+                if (seconds < 60) return `${seconds}s ago`;
+                const minutes = Math.floor(seconds / 60);
+                if (minutes < 60) return `${minutes}m ago`;
+                const hours = Math.floor(minutes / 60);
+                if (hours < 24) return `${hours}h ago`;
+                const days = Math.floor(hours / 24);
+                return `${days}d ago`;
+            };
+
+            const getSensors = () => safeJsonParse(localStorage.getItem("legacy-sensors"), []);
+            const getEvents = () => safeJsonParse(localStorage.getItem("legacy-history-events"), []);
+
+            const getSensorCounts = (sensors) => {
+                const total = sensors.length;
+                const isOnline = (s) => {
+                    const status = String(s?.status ?? "").toLowerCase();
+                    if (!status) return false;
+                    return status !== "offline" && status !== "disconnected";
+                };
+                const isTriggered = (s) => {
+                    const status = String(s?.status ?? "").toLowerCase();
+                    return status === "triggered" || status === "alert";
+                };
+                const isOffline = (s) => {
+                    const status = String(s?.status ?? "").toLowerCase();
+                    return status === "offline" || status === "disconnected";
+                };
+                const isLowBattery = (s) => {
+                    const status = String(s?.status ?? "").toLowerCase();
+                    if (status === "low_battery") return true;
+                    const battery = Number(s?.battery);
+                    if (!Number.isFinite(battery)) return false;
+                    return battery <= 20;
+                };
+
+                let online = 0;
+                let triggered = 0;
+                let offline = 0;
+                let lowBattery = 0;
+
+                for (const sensor of sensors) {
+                    if (isOnline(sensor)) online += 1;
+                    if (isTriggered(sensor)) triggered += 1;
+                    if (isOffline(sensor)) offline += 1;
+                    if (isLowBattery(sensor)) lowBattery += 1;
+                }
+
+                return { total, online, triggered, offline, lowBattery };
+            };
+
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = String(value);
+            };
+
+            const setBarWidth = (id, percentage) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const pct = Math.max(0, Math.min(100, Math.round(percentage)));
+                el.style.width = `${pct}%`;
+            };
+
+            const renderStats = (sensors) => {
+                const { total, online, triggered, offline, lowBattery } = getSensorCounts(sensors);
+                setText("dash-stat-active", online);
+                setText("dash-stat-triggered", String(triggered).padStart(2, "0"));
+                setText("dash-stat-low", String(lowBattery).padStart(2, "0"));
+                setText("dash-stat-offline", String(offline).padStart(2, "0"));
+
+                const denom = total || 1;
+                setBarWidth("dash-bar-active", (online / denom) * 100);
+                setBarWidth("dash-bar-triggered", (triggered / denom) * 100);
+                setBarWidth("dash-bar-low", (lowBattery / denom) * 100);
+                setBarWidth("dash-bar-offline", (offline / denom) * 100);
+
+                // Notifications badge = actionable issues
+                const notifCount = triggered + offline + lowBattery;
+                const badge = document.getElementById("notif-badge");
+                if (badge) {
+                    if (notifCount > 0) {
+                        badge.textContent = String(notifCount);
+                        badge.classList.remove("hidden");
+                    } else {
+                        badge.textContent = "0";
+                        badge.classList.add("hidden");
+                    }
+                }
+            };
+
+            const iconForEvent = (event) => {
+                const type = String(event?.type ?? "").toLowerCase();
+                if (type.includes("trigger")) return { icon: "warning", color: "error" };
+                if (type.includes("battery")) return { icon: "battery_low", color: "tertiary" };
+                if (type.includes("offline") || type.includes("disconnect")) return { icon: "signal_cellular_off", color: "slate-400" };
+                if (type.includes("online") || type.includes("connect")) return { icon: "check_circle", color: "secondary" };
+                if (type.includes("reset")) return { icon: "restart_alt", color: "primary" };
+                return { icon: "info", color: "primary" };
+            };
+
+            const renderActivityFeed = (events) => {
+                const feed = document.getElementById("activity-feed");
+                if (!feed) return;
+
+                const sorted = [...events]
+                    .filter((e) => e && e.timestamp)
+                    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+                    .slice(0, 8);
+
+                if (sorted.length === 0) {
+                    feed.innerHTML = `
+                        <div class="p-3 rounded-lg bg-surface-container-low text-sm text-slate-400">
+                            No activity yet. Add or update sensors to generate events.
+                        </div>
+                    `;
+                    return;
+                }
+
+                feed.innerHTML = sorted
+                    .map((e) => {
+                        const { icon, color } = iconForEvent(e);
+                        const title = escapeHtml(e.title || "Event");
+                        const detail = escapeHtml(e.detail || "");
+                        const time = escapeHtml(formatRelativeTime(e.timestamp));
+                        return `
+                            <div class="flex gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors group cursor-pointer" role="button" tabindex="0" data-nav-route="history">
+                                <div class="w-10 h-10 shrink-0 rounded-full bg-${color}/10 flex items-center justify-center text-${color}">
+                                    <span class="material-symbols-outlined text-base">${icon}</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold truncate">${title}</p>
+                                    ${detail ? `<p class="text-xs text-slate-500 truncate">${detail}</p>` : `<p class="text-xs text-slate-500">${time}</p>`}
+                                    ${detail ? `<p class="text-xs text-slate-500">${time}</p>` : ""}
+                                </div>
+                            </div>
+                        `;
+                    })
+                    .join("");
+            };
+
+            const startOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+            const addDays = (d, days) => {
+                const nd = new Date(d);
+                nd.setDate(nd.getDate() + days);
+                return nd;
+            };
+
+            const renderEfficiency = (events) => {
+                const container = document.getElementById("dash-eff-bars");
+                if (!container) return;
+
+                const bars = Array.from(container.querySelectorAll("[data-eff-bar]"));
+                const labels = Array.from(container.querySelectorAll("[data-eff-label]"));
+                if (bars.length !== 7 || labels.length !== 7) return;
+
+                const today = startOfDay(new Date());
+                const start = addDays(today, -6);
+
+                const counts = new Array(7).fill(0);
+                for (const e of events) {
+                    const ts = e?.timestamp ? new Date(e.timestamp) : null;
+                    if (!ts || Number.isNaN(ts.getTime())) continue;
+                    if (ts < start) continue;
+                    const day = startOfDay(ts);
+                    const index = Math.floor((day.getTime() - start.getTime()) / (24 * 60 * 60 * 1000));
+                    if (index >= 0 && index < 7) counts[index] += 1;
+                }
+
+                const max = Math.max(1, ...counts);
+                const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+                for (let i = 0; i < 7; i += 1) {
+                    const heightPct = Math.max(8, Math.round((counts[i] / max) * 100));
+                    bars[i].style.height = `${heightPct}%`;
+
+                    const labelDate = addDays(start, i);
+                    labels[i].textContent = dayNames[labelDate.getDay()];
+                }
+
+                const todayEvents = counts[6];
+                const todayLabel = document.getElementById("dash-eff-today");
+                if (todayLabel) todayLabel.textContent = `${todayEvents} events Today`;
+            };
+
+            const renderFloorMap = (sensors) => {
+                const img = document.getElementById("dash-floor-map");
+                if (!img) return;
+                const markersLayer = document.getElementById("dash-markers-layer");
+
+                const DEFAULT_FLOOR_MAPS = {
+                    floor1: "/legacy/maps/floor1.svg",
+                    floor2: "/legacy/maps/floor2.svg",
+                    floor3: "/legacy/maps/floor3.svg",
+                    basement: "/legacy/maps/basement.svg",
+                };
+
+                const floorConfig = safeJsonParse(localStorage.getItem("legacy-floors"), null);
+                const configuredFloors = Array.isArray(floorConfig)
+                    ? floorConfig
+                          .map((f) => (f && f.id ? String(f.id) : ""))
+                          .filter(Boolean)
+                    : [];
+
+                const labelByFloor = (() => {
+                    const fallback = {
+                        floor1: "Floor 1",
+                        floor2: "Floor 2",
+                        floor3: "Floor 3",
+                        basement: "Basement",
+                    };
+                    if (!Array.isArray(floorConfig)) return fallback;
+                    const map = { ...fallback };
+                    for (const entry of floorConfig) {
+                        if (!entry || !entry.id) continue;
+                        const id = String(entry.id);
+                        const label = entry.label ? String(entry.label) : "";
+                        if (label) map[id] = label;
+                    }
+                    return map;
+                })();
+
+                const floorIds = configuredFloors.length ? configuredFloors : ["floor1", "floor2", "floor3", "basement"];
+
+                const maps = safeJsonParse(localStorage.getItem("legacy-floor-maps"), null) || {};
+
+                const getMapUrlForFloor = (floor) => {
+                    const value = maps && typeof maps === "object" ? maps[floor] : null;
+                    if (value && typeof value === "string") return value;
+                    return DEFAULT_FLOOR_MAPS[floor] || DEFAULT_FLOOR_MAPS.floor2;
+                };
+
+                const ACTIVE_FLOOR_KEY = "legacy-dashboard-active-floor";
+                const saved = (localStorage.getItem(ACTIVE_FLOOR_KEY) || "").trim();
+                const activeFloor = floorIds.includes(saved) ? saved : floorIds.includes("floor2") ? "floor2" : floorIds[0];
+
+                const floorLabel = document.getElementById("dash-floor-label");
+                const setFloorLabel = (floor) => {
+                    if (!floorLabel) return;
+                    floorLabel.textContent = labelByFloor[floor] || floor;
+                };
+
+                img.src = getMapUrlForFloor(activeFloor);
+                img.dataset.floor = activeFloor;
+                setFloorLabel(activeFloor);
+
+                const normalizeFloorId = (value) => {
+                    if (!value) return null;
+                    const v = String(value);
+                    if (["floor1", "floor2", "floor3", "basement"].includes(v)) return v;
+                    const t = v.toLowerCase();
+                    if (t.includes("basement") || t.includes("sous") || t === "ss") return "basement";
+                    if (t.includes("floor1") || t.includes("floor 1") || t.includes("level 1") || t.includes("etage 1") || t.includes("niveau 1")) return "floor1";
+                    if (t.includes("floor2") || t.includes("floor 2") || t.includes("level 2") || t.includes("etage 2") || t.includes("niveau 2")) return "floor2";
+                    if (t.includes("floor3") || t.includes("floor 3") || t.includes("level 3") || t.includes("etage 3") || t.includes("niveau 3")) return "floor3";
+                    return null;
+                };
+
+                const getSensorFloorId = (sensor) => {
+                    if (!sensor || typeof sensor !== "object") return null;
+                    return (
+                        normalizeFloorId(sensor.floorId) ||
+                        normalizeFloorId(sensor.location && (sensor.location.floorId || sensor.location.floor)) ||
+                        normalizeFloorId(sensor.floor)
+                    );
+                };
+
+                const renderMarkersForFloor = (floor) => {
+                    if (!markersLayer) return;
+                    markersLayer.innerHTML = "";
+                    const list = Array.isArray(sensors) ? sensors : [];
+                    for (const sensor of list) {
+                        const floorId = getSensorFloorId(sensor);
+                        if (!floorId || floorId !== floor) continue;
+                        const loc = sensor && sensor.location ? sensor.location : null;
+                        if (!loc || loc.type !== "map") continue;
+                        const x = Number(loc.x);
+                        const y = Number(loc.y);
+                        if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+
+                        const status = String(sensor.status || "armed");
+                        const dot = document.createElement("div");
+                        dot.className =
+                            status === "triggered"
+                                ? 'w-3 h-3 rounded-full bg-error shadow-[0_0_10px_#ffb4ab]'
+                                : status === "low_battery"
+                                  ? 'w-3 h-3 rounded-full bg-tertiary shadow-[0_0_10px_#ffb95f]'
+                                  : status === "offline"
+                                    ? 'w-3 h-3 rounded-full bg-outline'
+                                    : 'w-3 h-3 rounded-full bg-secondary shadow-[0_0_10px_#4ae176]';
+
+                        if (status === "triggered" || status === "armed") {
+                            const ping = document.createElement("div");
+                            ping.className =
+                                status === "triggered"
+                                    ? "absolute inset-[-6px] rounded-full border border-error/30 animate-ping"
+                                    : "absolute inset-[-6px] rounded-full border border-secondary/30 animate-ping";
+                            dot.style.position = "relative";
+                            dot.appendChild(ping);
+                        }
+
+                        const wrapper = document.createElement("div");
+                        wrapper.style.position = "absolute";
+                        wrapper.style.left = `${x}%`;
+                        wrapper.style.top = `${y}%`;
+                        wrapper.style.transform = "translate(-50%, -50%)";
+                        wrapper.style.zIndex = "20";
+                        wrapper.appendChild(dot);
+                        markersLayer.appendChild(wrapper);
+                    }
+                };
+
+                renderMarkersForFloor(activeFloor);
+
+                // Wire scroll-to-switch-floor once.
+                const container = document.getElementById("dash-map-preview");
+                if (container && container.dataset.wheelBound !== "1") {
+                    container.dataset.wheelBound = "1";
+
+                    let lastWheelAt = 0;
+                    container.addEventListener(
+                        "wheel",
+                        (event) => {
+                            // Only intercept when the pointer is on the map preview.
+                            event.preventDefault();
+                            event.stopPropagation();
+
+                            const now = Date.now();
+                            if (now - lastWheelAt < 220) return;
+                            lastWheelAt = now;
+
+                            const current = (img.dataset.floor || activeFloor).trim();
+                            const currentIndex = Math.max(0, floorIds.indexOf(current));
+                            const direction = event.deltaY > 0 ? 1 : -1;
+                            const nextIndex = (currentIndex + direction + floorIds.length) % floorIds.length;
+                            const nextFloor = floorIds[nextIndex];
+
+                            localStorage.setItem(ACTIVE_FLOOR_KEY, nextFloor);
+                            img.src = getMapUrlForFloor(nextFloor);
+                            img.dataset.floor = nextFloor;
+                            setFloorLabel(nextFloor);
+                            renderMarkersForFloor(nextFloor);
+                        },
+                        { passive: false }
+                    );
+                }
+            };
+
+            const render = () => {
+                const sensors = getSensors();
+                const events = getEvents();
+                renderStats(sensors);
+                renderActivityFeed(events);
+                renderEfficiency(events);
+                renderFloorMap(sensors);
+            };
+
+            window.addEventListener("storage", (e) => {
+                if (!e || !e.key) return;
+                if (e.key === "legacy-sensors" || e.key === "legacy-history-events" || e.key === "legacy-floor-maps") {
+                    render();
+                }
+            });
+
+            window.addEventListener("legacy-sensors-updated", render);
+
+            render();
+        })();
+    </script>
+<script>
+    (function () {
+        const routes = {
+            login: "/",
+            register: "/register",
+            dashboard: "/dashboard",
+            sensors: "/sensors",
+            map: "/map",
+            history: "/history",
+            notifications: "/notifications",
+            deploy: "/deploy-trap"
+        };
+
+        const normalize = (value) =>
+            (value || "")
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim();
+
+        const detectRoute = (text) => {
+            const t = normalize(text);
+            if (t.includes("creer un compte") || t.includes("create account") || t.includes("inscription")) return "register";
+            if (t.includes("connectez") || t.includes("connexion") || t.includes("login") || t.includes("logout")) return "login";
+            if (t.includes("overview") || t.includes("dashboard") || t.includes("live status") || t.includes("archive")) return "dashboard";
+            if (t.includes("history") || t.includes("historique") || t.includes("events") || t.includes("event log")) return "history";
+            if (t.includes("floor map") || t.includes(" map") || t === "map") return "map";
+            if (t.includes("sensor") || t.includes("capteur") || t.includes("devices")) return "sensors";
+            if (t.includes("notification") || t.includes("notifications") || t.includes("alert")) return "notifications";
+            return null;
+        };
+
+        const navigateHref = (href) => {
+            try {
+                if (window.top && window.top !== window) {
+                    window.top.postMessage({ type: "lumiere:navigate", href }, window.location.origin);
+                    return;
+                }
+            } catch {
+                // ignore
+            }
+            window.location.href = href;
+        };
+
+        const goTo = (route) => {
+            const href = routes[route];
+            if (!href) return;
+            navigateHref(href);
+        };
+
+        const hrefForNavTarget = (el) => {
+            const routeKey = el.getAttribute("data-nav-route");
+            if (!routeKey) return null;
+            return routes[routeKey] || routeKey;
+        };
+
+        document.addEventListener(
+            "click",
+            (event) => {
+                const target = event.target && event.target.closest ? event.target.closest("[data-nav-route]") : null;
+                if (!target) return;
+                const href = hrefForNavTarget(target);
+                if (!href) return;
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                navigateHref(href);
+            },
+            true
+        );
+
+        document.addEventListener(
+            "keydown",
+            (event) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
+                const target = event.target && event.target.closest ? event.target.closest("[data-nav-route]") : null;
+                if (!target) return;
+                const href = hrefForNavTarget(target);
+                if (!href) return;
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                navigateHref(href);
+            },
+            true
+        );
+
+        document.querySelectorAll('a[href="#"]').forEach((anchor) => {
+            const route = detectRoute(anchor.textContent);
+            if (route) {
+                anchor.href = routes[route];
+                anchor.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    goTo(route);
+                });
+            } else {
+                anchor.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    alert("Fonctionnalite de demonstration.");
+                });
+            }
+        });
+
+        document.querySelectorAll("form").forEach((form) => {
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+                goTo("dashboard");
+            });
+        });
+
+        document.querySelectorAll("button").forEach((button) => {
+            if (button.type === "submit") return;
+            if (button.dataset.topbar === "1") return;
+            if (button.hasAttribute("data-nav-route")) return;
+
+            if (button.dataset.deployTrigger === "1") {
+                button.addEventListener("click", () => {
+                    if (window.openDeployTrapModal) window.openDeployTrapModal();
+                });
+                return;
+            }
+
+            const text = normalize(button.textContent);
+            const route = detectRoute(text);
+
+            if (text.includes("deploy new trap")) {
+                button.addEventListener("click", () => {
+                    if (window.openDeployTrapModal) window.openDeployTrapModal();
+                });
+                return;
+            }
+
+            if (text.includes("expand map view")) {
+                button.addEventListener("click", () => goTo("map"));
+                return;
+            }
+
+            if (text.includes("support")) {
+                button.addEventListener("click", () => {
+                    window.location.href = "mailto:support@lumiere-iot.local";
+                });
+                return;
+            }
+
+            if (route) {
+                button.addEventListener("click", () => goTo(route));
+                return;
+            }
+
+            button.addEventListener("click", () => {
+                alert("Action executee en mode demo.");
+            });
+        });
+    })();
+</script>
+</body></html>

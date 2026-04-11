@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html class="dark" lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <title>Profile Settings</title>
+</head>
+<body class="bg-[#0b1326] text-[#dae2fd] font-['Inter'] min-h-screen">
+  <header></header>
+  <main class="max-w-4xl mx-auto p-8">
+    <a href="dashboard.html" class="text-sm text-[#adc6ff] hover:underline">&larr; Retour au tableau de bord</a>
+    <section class="mt-6 rounded-2xl border border-[#424754]/40 bg-[#171f33] p-8">
+      <h1 class="text-3xl font-black font-['Manrope']">Modifier le profil</h1>
+      <p class="mt-2 text-sm text-[#c2c6d6]">Mettez a jour les informations du responsable.</p>
+      <form id="profile-form" class="mt-8 grid gap-4">
+        <label class="text-sm">Nom complet
+          <input id="name" class="mt-1 w-full rounded-xl border-none bg-[#060e20]" />
+        </label>
+        <label class="text-sm">Role
+          <input id="role" class="mt-1 w-full rounded-xl border-none bg-[#060e20]" />
+        </label>
+        <label class="text-sm">Email professionnel
+          <input id="email" type="email" class="mt-1 w-full rounded-xl border-none bg-[#060e20]" />
+        </label>
+        <label class="text-sm">ID Employe
+          <input id="employeeId" class="mt-1 w-full rounded-xl border-none bg-[#060e20]" />
+        </label>
+        <label class="text-sm">Telephone
+          <input id="phone" class="mt-1 w-full rounded-xl border-none bg-[#060e20]" />
+        </label>
+        <div class="mt-4 flex gap-3 justify-end">
+          <button type="button" id="reset" class="px-5 py-2 rounded-full border border-[#424754]">Reinitialiser</button>
+          <button type="submit" class="px-6 py-2 rounded-full bg-gradient-to-r from-[#adc6ff] to-[#4d8eff] text-[#002e6a] font-bold">Sauvegarder</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="topbar.js"></script>
+  <script>
+    (function () {
+      var PROFILE_KEY = "legacy-profile";
+      var defaults = {
+        name: "Jean-Marc Valois",
+        role: "Directeur de l'Exploitation",
+        email: "jm.valois@nocturne-protocol.com",
+        employeeId: "NP-8829-X",
+        phone: "+33 6 44 21 93 88",
+      };
+
+      var load = function () {
+        try {
+          var raw = localStorage.getItem(PROFILE_KEY);
+          return raw ? Object.assign({}, defaults, JSON.parse(raw)) : defaults;
+        } catch (_e) {
+          return defaults;
+        }
+      };
+
+      var save = function (data) {
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(data));
+      };
+
+      var form = document.getElementById("profile-form");
+      var fields = {
+        name: document.getElementById("name"),
+        role: document.getElementById("role"),
+        email: document.getElementById("email"),
+        employeeId: document.getElementById("employeeId"),
+        phone: document.getElementById("phone"),
+      };
+
+      var fill = function (data) {
+        Object.keys(fields).forEach(function (key) {
+          fields[key].value = data[key] || "";
+        });
+      };
+
+      fill(load());
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var payload = {
+          name: fields.name.value.trim(),
+          role: fields.role.value.trim(),
+          email: fields.email.value.trim(),
+          employeeId: fields.employeeId.value.trim(),
+          phone: fields.phone.value.trim(),
+        };
+        save(payload);
+        alert("Profil mis a jour.");
+        window.location.href = "dashboard.html";
+      });
+
+      document.getElementById("reset").addEventListener("click", function () {
+        fill(defaults);
+      });
+    })();
+  </script>
+</body>
+</html>

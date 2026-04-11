@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumiere IoT | Sensor Inventory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary": "#4ae176",
+            "surface-container-high": "#222a3d",
+            "on-surface": "#dae2fd",
+            "outline-variant": "#424754",
+            "tertiary-container": "#ca8100",
+            "on-secondary-fixed-variant": "#005321",
+            "inverse-primary": "#005ac2",
+            "secondary-container": "#00b954",
+            "on-primary": "#002e6a",
+            "primary-container": "#4d8eff",
+            "on-surface-variant": "#c2c6d6",
+            "on-tertiary-container": "#3e2400",
+            "on-background": "#dae2fd",
+            "on-secondary-container": "#004119",
+            "secondary-fixed-dim": "#4ae176",
+            "surface-dim": "#0b1326",
+            "on-tertiary": "#472a00",
+            "primary": "#adc6ff",
+            "on-error-container": "#ffdad6",
+            "surface-bright": "#31394d",
+            "outline": "#8c909f",
+            "inverse-surface": "#dae2fd",
+            "surface-variant": "#2d3449",
+            "surface-tint": "#adc6ff",
+            "tertiary": "#ffb95f",
+            "tertiary-fixed-dim": "#ffb95f",
+            "surface": "#0b1326",
+            "inverse-on-surface": "#283044",
+            "primary-fixed": "#d8e2ff",
+            "surface-container-lowest": "#060e20",
+            "background": "#0b1326",
+            "surface-container": "#171f33",
+            "error-container": "#93000a",
+            "on-tertiary-fixed-variant": "#653e00",
+            "on-secondary": "#003915",
+            "on-primary-container": "#00285d",
+            "on-tertiary-fixed": "#2a1700",
+            "on-primary-fixed-variant": "#004395",
+            "surface-container-low": "#131b2e",
+            "secondary-fixed": "#6bff8f",
+            "on-secondary-fixed": "#002109",
+            "on-primary-fixed": "#001a42",
+            "primary-fixed-dim": "#adc6ff",
+            "on-error": "#690005",
+            "surface-container-highest": "#2d3449",
+            "error": "#ffb4ab",
+            "tertiary-fixed": "#ffddb8"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #0b1326;
+      color: #dae2fd;
+      font-family: 'Inter', sans-serif;
+    }
+    .glass-overlay {
+      background: rgba(45, 52, 73, 0.6);
+      backdrop-filter: blur(20px);
+    }
+    .glow-dot {
+      box-shadow: 0 0 8px currentColor;
+    }
+  </style>
+</head>
+<body class="flex overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen py-6 px-4 gap-4 bg-[#131b2e] dark:bg-[#131b2e] w-64 shrink-0 transition-transform duration-200">
+<div class="flex items-center gap-3 px-2 mb-4">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#adc6ff] to-[#4d8eff] flex items-center justify-center shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined text-on-primary" data-icon="hub" data-weight="fill" style="font-variation-settings: 'FILL' 1;">hub</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-[#adc6ff] font-manrope tracking-tighter">Nocturne Protocol</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">IoT Control Center</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope text-sm hover:bg-[#2d3449] hover:text-white rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1" data-icon="dashboard">dashboard</span>
+        Overview
+      </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope text-sm hover:bg-[#2d3449] hover:text-white rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1" data-icon="map">map</span>
+        Floor Map
+      </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#adc6ff] font-bold bg-[#171f33] rounded-lg font-manrope text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="sensors" data-weight="fill" style="font-variation-settings: 'FILL' 1;">sensors</span>
+        Sensor List
+      </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope text-sm hover:bg-[#2d3449] hover:text-white rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1" data-icon="history">history</span>
+        History
+      </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope text-sm hover:bg-[#2d3449] hover:text-white rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1" data-icon="settings">settings</span>
+        Settings
+      </a>
+</nav>
+<div class="mt-auto px-2">
+<button class="w-full py-3 bg-gradient-to-r from-[#adc6ff] to-[#4d8eff] rounded-full text-[#002e6a] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-primary/20 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add_circle">add_circle</span>
+        Deploy New Trap
+      </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0 bg-[#0b1326]">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-6 h-16 bg-[#0b1326] dark:bg-[#0b1326]">
+<div class="flex items-center gap-8">
+<div class="text-xl font-bold tracking-tighter text-[#adc6ff] font-manrope">Lumiere IoT</div>
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-[#adc6ff] border-b-2 border-[#adc6ff] pb-1 font-manrope font-semibold tracking-tight text-sm" href="#">Live Status</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-400 hover:bg-[#171f33] rounded-full transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:bg-[#171f33] rounded-full transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="contrast">contrast</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/20">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="Portrait of a professional operations manager in a dimly lit office with cool blue ambient light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1GPOlGyYw4Gem-zwRCtyiQ-bIukEl0gsLVr2ah1OveF_LF1ZwpMA9eXz8rDOuBcqgv1aQ3FajRn2ijkaK5Xz3pIme2Vgf_PnKrZMbQoQ3C7-MvcpJKMGNi58CDGmghz7iLauIu3LRwBoVmnOLQ8g5Y1VQm8AqtueV1XGRF_YSAW_SncY2SkL_WroaO1HmhpSiPLb9nB1CFljM5JKPA80QBlQr8zTSsis9eA1i7XklQvR6DW1OfB3_a3e4R1hEjdZ2R9pvQsOMsBY"/>
+</div>
+</div>
+</header>
+<!-- Separation Line -->
+<div class="bg-[#131b2e] h-[1px] w-full"></div>
+<!-- Content Area -->
+<section class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+<!-- Header & Filter Bar -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="space-y-1">
+<h2 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface">Sensor Inventory</h2>
+<p class="text-on-surface-variant text-sm font-body">Managing 1,284 active deployment units across 12 sectors.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-5 py-2.5 bg-surface-container hover:bg-surface-container-highest rounded-full text-sm font-semibold flex items-center gap-2 border border-outline-variant/10 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+            Reset Triggered
+          </button>
+<button class="px-5 py-2.5 bg-surface-container hover:bg-surface-container-highest rounded-full text-sm font-semibold flex items-center gap-2 border border-outline-variant/10 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="picture_as_pdf">picture_as_pdf</span>
+            Export PDF
+          </button>
+</div>
+</div>
+<!-- Search & Filters Container -->
+<div class="bg-surface-container-low p-4 rounded-xl flex flex-wrap items-center gap-4 border border-outline-variant/5">
+<div class="relative flex-1 min-w-[280px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-surface-container-lowest border-none focus:ring-1 focus:ring-primary rounded-lg text-sm text-on-surface placeholder:text-outline/60" placeholder="Search by Trap ID, MAC or Zone..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-outline uppercase tracking-wider px-2">Floor</span>
+<select class="bg-surface-container border-none text-sm rounded-lg focus:ring-1 focus:ring-primary py-2 pr-8 pl-3 text-on-surface-variant">
+<option>All Floors</option>
+<option>Basement</option>
+<option>Lobby</option>
+<option>Floor 01-10</option>
+<option>Floor 11-20</option>
+<option>Penthouse</option>
+</select>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-outline uppercase tracking-wider px-2">Status</span>
+<select class="bg-surface-container border-none text-sm rounded-lg focus:ring-1 focus:ring-primary py-2 pr-8 pl-3 text-on-surface-variant">
+<option>Any Status</option>
+<option>Armed</option>
+<option>Triggered</option>
+<option>Low Battery</option>
+<option>Offline</option>
+</select>
+</div>
+<button class="p-2.5 bg-surface-container-highest text-primary rounded-lg hover:brightness-125 transition-all">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+</button>
+</div>
+<!-- Inventory Table -->
+<div class="bg-surface-container rounded-xl overflow-hidden border border-outline-variant/5">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 text-outline uppercase text-[10px] font-bold tracking-[0.15em]">
+<th class="px-6 py-4">Trap ID</th>
+<th class="px-6 py-4">Floor</th>
+<th class="px-6 py-4">Room/Zone</th>
+<th class="px-6 py-4">Current Status</th>
+<th class="px-6 py-4">Last Activity</th>
+<th class="px-6 py-4">Battery</th>
+<th class="px-6 py-4">Signal</th>
+<th class="px-6 py-4 text-center">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10 text-sm font-body">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors">
+<td class="px-6 py-5 font-mono text-primary font-bold">TRP-0922-A</td>
+<td class="px-6 py-5 text-on-surface">Floor 04</td>
+<td class="px-6 py-5 text-on-surface-variant">Service Corridor D</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/20 text-secondary text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary glow-dot"></span>
+                  Armed
+                </span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant">2m ago</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-secondary text-base" data-icon="battery_full">battery_full</span>
+                  98%
+                </div>
+</td>
+<td class="px-6 py-5">
+<span class="material-symbols-outlined text-secondary text-base" data-icon="signal_cellular_4_bar">signal_cellular_4_bar</span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-low/30 hover:bg-surface-container-highest/30 transition-colors">
+<td class="px-6 py-5 font-mono text-primary font-bold">TRP-1104-C</td>
+<td class="px-6 py-5 text-on-surface">Lobby</td>
+<td class="px-6 py-5 text-on-surface-variant">Kitchen Prep South</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error-container text-on-error-container text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-error glow-dot"></span>
+                  Triggered
+                </span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant">14s ago</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-primary text-base" data-icon="battery_5_bar">battery_5_bar</span>
+                  72%
+                </div>
+</td>
+<td class="px-6 py-5">
+<span class="material-symbols-outlined text-secondary text-base" data-icon="signal_cellular_4_bar">signal_cellular_4_bar</span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors">
+<td class="px-6 py-5 font-mono text-primary font-bold">TRP-0081-F</td>
+<td class="px-6 py-5 text-on-surface">Basement</td>
+<td class="px-6 py-5 text-on-surface-variant">HVAC Room 02</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-container/20 text-tertiary text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary glow-dot"></span>
+                  Low Battery
+                </span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant">1h 12m ago</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-tertiary">
+<span class="material-symbols-outlined text-base" data-icon="battery_1_bar">battery_1_bar</span>
+                  12%
+                </div>
+</td>
+<td class="px-6 py-5">
+<span class="material-symbols-outlined text-tertiary text-base" data-icon="signal_cellular_1_bar">signal_cellular_1_bar</span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-low/30 hover:bg-surface-container-highest/30 transition-colors">
+<td class="px-6 py-5 font-mono text-primary font-bold">TRP-4421-K</td>
+<td class="px-6 py-5 text-on-surface">Floor 18</td>
+<td class="px-6 py-5 text-on-surface-variant">Executive Suite 1802</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/20 text-secondary text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary glow-dot"></span>
+                  Armed
+                </span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant">42m ago</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-secondary text-base" data-icon="battery_6_bar">battery_6_bar</span>
+                  88%
+                </div>
+</td>
+<td class="px-6 py-5">
+<span class="material-symbols-outlined text-secondary text-base" data-icon="signal_cellular_3_bar">signal_cellular_3_bar</span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors">
+<td class="px-6 py-5 font-mono text-primary font-bold">TRP-9021-M</td>
+<td class="px-6 py-5 text-on-surface">Floor 02</td>
+<td class="px-6 py-5 text-on-surface-variant">Laundry Chute Basin</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-outline-variant/20 text-outline text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-outline glow-dot"></span>
+                  Offline
+                </span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant">6h 04m ago</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-outline">
+<span class="material-symbols-outlined text-base" data-icon="battery_unknown">battery_unknown</span>
+                  N/A
+                </div>
+</td>
+<td class="px-6 py-5">
+<span class="material-symbols-outlined text-error text-base" data-icon="signal_cellular_connected_no_internet_4_bar">signal_cellular_connected_no_internet_4_bar</span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 flex items-center justify-between bg-surface-container-high/30">
+<p class="text-xs text-on-surface-variant">Showing <span class="font-bold text-on-surface">1 - 5</span> of <span class="font-bold text-on-surface">1,284</span> traps</p>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest text-outline transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-on-primary text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest text-on-surface-variant text-xs">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest text-on-surface-variant text-xs">3</button>
+<span class="px-1 text-outline">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest text-on-surface-variant text-xs">257</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest text-outline transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Metrics Asymmetric Footer -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+<div class="lg:col-span-2 bg-gradient-to-br from-surface-container to-surface-container-low p-6 rounded-xl flex items-center justify-between border border-outline-variant/10">
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest mb-1">Fleet Health</span>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-extrabold font-headline text-secondary">98.2%</span>
+<span class="text-xs text-secondary/80 font-semibold">+0.4%</span>
+</div>
+</div>
+<div class="h-12 w-[1px] bg-outline-variant/20"></div>
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest mb-1">Active Alerts</span>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-extrabold font-headline text-error">14</span>
+<span class="text-xs text-error/80 font-semibold">Priority</span>
+</div>
+</div>
+</div>
+<div class="hidden sm:block">
+<img alt="Fleet health graph" class="h-16 w-auto opacity-50 grayscale hover:grayscale-0 transition-all duration-500" data-alt="Minimalist abstract neon green line chart glowing against a deep navy background, representing data stability" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJcKYdK-3aHDH92rXbhP9liiIR-rjf3-j706YlVGGLERJP1o7JJCczk4zX429AXKzs63VHzwHNBH8sjKV2hWLyMb9tVBEpi_S5s08dT7qvPdDa3rwd2q2NYQqX87qvIZ4QzNZtjeqL00zM5hFrdlrINP2FVpUpDVd0IUE_0LQiSooQxr-F88Ul2J0BiaMKqT22I6yYVEL-cKwx7j1V2O63D1yDDBON4W4mg0yTqAWxnka1TqCKBIh7NRMfMGwNklcnvfYDj0ba3PE"/>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
+<div class="relative z-10">
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest mb-2 block">System Sync</span>
+<div class="flex items-center gap-3">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-surface-container bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-on-secondary-container" data-icon="check">check</span>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-surface-container bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-on-primary-container" data-icon="sync">sync</span>
+</div>
+</div>
+<span class="text-sm font-semibold text-on-surface">Cloud Link Stable</span>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-4 font-mono">LATENCY: 24MS / PACKETS: 100%</p>
+</div>
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl" data-icon="cloud_done">cloud_done</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Mobile Bottom Nav -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#131b2e] flex justify-around items-center px-4 z-50">
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-[#adc6ff]">
+<span class="material-symbols-outlined" data-icon="sensors" data-weight="fill" style="font-variation-settings: 'FILL' 1;">sensors</span>
+<span class="text-[10px] font-bold">Sensors</span>
+</button>
+<button class="w-12 h-12 -mt-8 bg-primary rounded-full shadow-lg shadow-primary/40 flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="text-[10px] font-bold">Map</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px] font-bold">Admin</span>
+</button>
+</nav>
+<script>
+  (function () {
+    const routes = {
+      login: "index.html",
+      register: "inscription.html",
+      dashboard: "dashboard.html",
+      sensors: "capteurs.html",
+      settings: "parametres.html",
+      map: "plan.html"
+    };
+
+    const normalize = (value) =>
+      (value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+    const detectRoute = (text) => {
+      const t = normalize(text);
+      if (t.includes("creer un compte") || t.includes("create account") || t.includes("inscription")) return "register";
+      if (t.includes("connectez") || t.includes("connexion") || t.includes("login") || t.includes("logout")) return "login";
+      if (t.includes("overview") || t.includes("dashboard") || t.includes("live status") || t.includes("archive")) return "dashboard";
+      if (t.includes("floor map") || t.includes(" map") || t === "map") return "map";
+      if (t.includes("sensor") || t.includes("capteur") || t.includes("devices")) return "sensors";
+      if (t.includes("setting") || t.includes("configuration") || t.includes("admin")) return "settings";
+      return null;
+    };
+
+    const goTo = (route) => {
+      window.location.href = routes[route];
+    };
+
+    document.querySelectorAll('a[href="#"]').forEach((anchor) => {
+      const route = detectRoute(anchor.textContent);
+      if (route) {
+        anchor.href = routes[route];
+      } else {
+        anchor.addEventListener("click", (event) => {
+          event.preventDefault();
+          alert("Fonctionnalite de demonstration.");
+        });
+      }
+    });
+
+    document.querySelectorAll("form").forEach((form) => {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        goTo("dashboard");
+      });
+    });
+
+    document.querySelectorAll("button").forEach((button) => {
+      if (button.type === "submit") return;
+
+      const text = normalize(button.textContent);
+      const route = detectRoute(text);
+
+      if (text.includes("deploy new trap") || text.includes("expand map view")) {
+        button.addEventListener("click", () => goTo("map"));
+        return;
+      }
+
+      if (text.includes("support")) {
+        button.addEventListener("click", () => {
+          window.location.href = "mailto:support@lumiere-iot.local";
+        });
+        return;
+      }
+
+      if (route) {
+        button.addEventListener("click", () => goTo(route));
+        return;
+      }
+
+      button.addEventListener("click", () => {
+        alert("Action executee en mode demo.");
+      });
+    });
+  })();
+</script>
+</body></html>

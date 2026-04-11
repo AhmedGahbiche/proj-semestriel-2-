@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1326"/>
+      <stop offset="1" stop-color="#2d3449"/>
+    </linearGradient>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#adc6ff" stroke-opacity="0.08" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+
+  <g fill="none" stroke="#dae2fd" stroke-opacity="0.55" stroke-width="3">
+    <rect x="120" y="220" width="1360" height="680" rx="18"/>
+
+    <rect x="170" y="270" width="410" height="580" rx="14"/>
+    <rect x="600" y="270" width="410" height="580" rx="14"/>
+    <rect x="1030" y="270" width="400" height="580" rx="14"/>
+
+    <path d="M 580 560 L 600 560"/>
+    <path d="M 1010 560 L 1030 560"/>
+  </g>
+
+  <g fill="#c2c6d6" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="18" font-weight="700" opacity="0.85">
+    <text x="190" y="310">Gym</text>
+    <text x="620" y="310">Pool</text>
+    <text x="1050" y="310">Rooftop Access</text>
+  </g>
+
+  <g>
+    <circle cx="350" cy="520" r="9" fill="#ffb4ab" fill-opacity="0.95"/>
+    <circle cx="780" cy="660" r="9" fill="#4ae176" fill-opacity="0.95"/>
+    <circle cx="1220" cy="420" r="9" fill="#ffb95f" fill-opacity="0.95"/>
+  </g>
+</svg>

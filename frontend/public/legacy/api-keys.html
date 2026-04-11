@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html class="dark" lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <title>API Keys</title>
+</head>
+<body class="bg-[#0b1326] text-[#dae2fd] min-h-screen font-['Inter']">
+  <header></header>
+  <main class="max-w-4xl mx-auto p-8">
+    <a href="dashboard.html" class="text-sm text-[#adc6ff] hover:underline">&larr; Retour au tableau de bord</a>
+    <section class="mt-6 rounded-2xl border border-[#424754]/40 bg-[#171f33] p-8">
+      <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-black font-['Manrope']">Cles API</h1>
+        <button id="generate" class="px-4 py-2 rounded-full bg-gradient-to-r from-[#adc6ff] to-[#4d8eff] text-[#002e6a] font-bold">Generer</button>
+      </div>
+      <ul id="key-list" class="mt-6 space-y-3"></ul>
+    </section>
+  </main>
+  <script src="topbar.js"></script>
+  <script>
+    (function () {
+      var KEY = "legacy-api-keys";
+      var list = document.getElementById("key-list");
+
+      var load = function () {
+        try {
+          var raw = localStorage.getItem(KEY);
+          return raw ? JSON.parse(raw) : [];
+        } catch (_e) {
+          return [];
+        }
+      };
+
+      var save = function (keys) {
+        localStorage.setItem(KEY, JSON.stringify(keys));
+      };
+
+      var mask = function (value) {
+        return value.slice(0, 8) + "..." + value.slice(-4);
+      };
+
+      var render = function (keys) {
+        if (!keys.length) {
+          list.innerHTML = '<li class="text-sm text-[#c2c6d6]">Aucune cle active.</li>';
+          return;
+        }
+        list.innerHTML = keys
+          .map(function (item) {
+            return '<li class="rounded-xl bg-[#131b2e] p-4 flex items-center justify-between"><div><p class="font-semibold">' + mask(item.value) + '</p><p class="text-xs text-[#8c909f]">Cree le ' + new Date(item.createdAt).toLocaleString() + '</p></div><button data-id="' + item.id + '" class="text-xs px-3 py-1 rounded-full border border-[#424754]">Revoquer</button></li>';
+          })
+          .join('');
+      };
+
+      var keys = load();
+      render(keys);
+
+      document.getElementById("generate").addEventListener("click", function () {
+        var id = "key-" + Date.now();
+        var value = "np_" + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+        keys.unshift({ id: id, value: value, createdAt: new Date().toISOString() });
+        save(keys);
+        render(keys);
+      });
+
+      list.addEventListener("click", function (event) {
+        var target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        var id = target.getAttribute("data-id");
+        if (!id) return;
+        keys = keys.filter(function (item) { return item.id !== id; });
+        save(keys);
+        render(keys);
+      });
+    })();
+  </script>
+</body>
+</html>

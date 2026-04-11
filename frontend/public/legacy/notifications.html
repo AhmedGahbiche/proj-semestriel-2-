@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lumiere IoT | Notifications</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#d8e2ff",
+              "surface-bright": "#31394d",
+              "surface-container": "#171f33",
+              "on-surface": "#dae2fd",
+              "tertiary-container": "#ca8100",
+              "on-error": "#690005",
+              background: "#0b1326",
+              "on-surface-variant": "#c2c6d6",
+              "surface-container-low": "#131b2e",
+              "on-primary": "#002e6a",
+              "inverse-on-surface": "#283044",
+              "surface-container-highest": "#2d3449",
+              "on-secondary": "#003915",
+              "surface-dim": "#0b1326",
+              error: "#ffb4ab",
+              "on-error-container": "#ffdad6",
+              tertiary: "#ffb95f",
+              surface: "#0b1326",
+              "primary-container": "#4d8eff",
+              "secondary-container": "#00b954",
+              "on-tertiary": "#472a00",
+              "outline-variant": "#424754",
+              "surface-container-high": "#222a3d",
+              "surface-container-lowest": "#060e20",
+              secondary: "#4ae176",
+              outline: "#8c909f",
+              primary: "#adc6ff",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0b1326;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #2d3449;
+        border-radius: 9999px;
+      }
+    </style>
+  </head>
+
+  <body class="bg-background text-on-surface font-body min-h-screen">
+    <header></header>
+
+    <main class="px-6 py-8 max-w-6xl mx-auto space-y-6">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-black font-headline">Notifications</h1>
+          <p class="text-sm text-on-surface-variant">Active alerts derived from your sensors.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="px-4 py-2 rounded-full text-sm font-bold text-primary bg-primary/10 hover:bg-primary/20 transition-colors"
+            data-nav-route="sensors"
+          >
+            View Sensors
+          </button>
+          <button
+            type="button"
+            class="px-4 py-2 rounded-full text-sm font-bold text-primary bg-primary/10 hover:bg-primary/20 transition-colors"
+            data-nav-route="history"
+          >
+            View History
+          </button>
+        </div>
+      </div>
+
+      <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-surface-container rounded-xl p-5 border border-outline-variant/10">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Triggered</p>
+            <span class="material-symbols-outlined text-error text-sm">warning</span>
+          </div>
+          <p id="notif-count-triggered" class="mt-2 text-3xl font-black font-headline">0</p>
+        </div>
+
+        <div class="bg-surface-container rounded-xl p-5 border border-outline-variant/10">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Offline</p>
+            <span class="material-symbols-outlined text-on-surface-variant text-sm">signal_cellular_off</span>
+          </div>
+          <p id="notif-count-offline" class="mt-2 text-3xl font-black font-headline">0</p>
+        </div>
+
+        <div class="bg-surface-container rounded-xl p-5 border border-outline-variant/10">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Low Battery</p>
+            <span class="material-symbols-outlined text-tertiary text-sm">battery_low</span>
+          </div>
+          <p id="notif-count-low" class="mt-2 text-3xl font-black font-headline">0</p>
+        </div>
+      </section>
+
+      <section class="bg-surface-container rounded-xl border border-outline-variant/10 overflow-hidden">
+        <div class="px-6 py-5 border-b border-outline-variant/10 flex items-center justify-between">
+          <h2 class="font-bold font-headline">Active Alerts</h2>
+          <span id="notif-last-updated" class="text-[10px] uppercase tracking-widest text-on-surface-variant">Updated —</span>
+        </div>
+        <div id="notif-list" class="p-4 space-y-3"></div>
+      </section>
+
+      <p class="text-xs text-on-surface-variant">
+        Tip: Alerts update automatically when sensors change.
+      </p>
+    </main>
+
+    <script src="topbar.js"></script>
+    <script>
+      (function () {
+        const routes = {
+          dashboard: "/dashboard",
+          sensors: "/sensors",
+          history: "/history",
+          map: "/map",
+          notifications: "/notifications",
+        };
+
+        const navigateHref = (href) => {
+          try {
+            if (window.top && window.top !== window) {
+              window.top.postMessage({ type: "lumiere:navigate", href }, window.location.origin);
+              return;
+            }
+          } catch {
+            // ignore
+          }
+          window.location.href = href;
+        };
+
+        const hrefForNavTarget = (el) => {
+          const routeKey = el.getAttribute("data-nav-route");
+          if (!routeKey) return null;
+          return routes[routeKey] || routeKey;
+        };
+
+        document.addEventListener(
+          "click",
+          (event) => {
+            const target = event.target && event.target.closest ? event.target.closest("[data-nav-route]") : null;
+            if (!target) return;
+            const href = hrefForNavTarget(target);
+            if (!href) return;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            navigateHref(href);
+          },
+          true
+        );
+
+        document.addEventListener(
+          "keydown",
+          (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            const target = event.target && event.target.closest ? event.target.closest("[data-nav-route]") : null;
+            if (!target) return;
+            const href = hrefForNavTarget(target);
+            if (!href) return;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            navigateHref(href);
+          },
+          true
+        );
+
+        const safeJsonParse = (value, fallback) => {
+          try {
+            if (!value) return fallback;
+            return JSON.parse(value);
+          } catch {
+            return fallback;
+          }
+        };
+
+        const formatTime = (iso) => {
+          const date = iso ? new Date(iso) : null;
+          if (!date || Number.isNaN(date.getTime())) return "";
+          return date.toLocaleString();
+        };
+
+        const escapeHtml = (input) =>
+          String(input ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/\"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+        const isTriggered = (s) => {
+          const status = String(s?.status ?? "").toLowerCase();
+          return status === "triggered" || status === "alert";
+        };
+
+        const isOffline = (s) => {
+          const status = String(s?.status ?? "").toLowerCase();
+          return status === "offline" || status === "disconnected";
+        };
+
+        const isLowBattery = (s) => {
+          const status = String(s?.status ?? "").toLowerCase();
+          if (status === "low_battery") return true;
+          const battery = Number(s?.battery);
+          if (!Number.isFinite(battery)) return false;
+          return battery <= 20;
+        };
+
+        const iconForSensor = (s) => {
+          if (isTriggered(s)) return { icon: "warning", color: "error", label: "Triggered" };
+          if (isOffline(s)) return { icon: "signal_cellular_off", color: "outline", label: "Offline" };
+          if (isLowBattery(s)) return { icon: "battery_low", color: "tertiary", label: "Low Battery" };
+          return { icon: "info", color: "primary", label: "Info" };
+        };
+
+        const render = () => {
+          const sensors = safeJsonParse(localStorage.getItem("legacy-sensors"), []);
+          const alerts = sensors.filter((s) => isTriggered(s) || isOffline(s) || isLowBattery(s));
+
+          const triggeredCount = alerts.filter(isTriggered).length;
+          const offlineCount = alerts.filter(isOffline).length;
+          const lowCount = alerts.filter(isLowBattery).length;
+
+          const elTriggered = document.getElementById("notif-count-triggered");
+          const elOffline = document.getElementById("notif-count-offline");
+          const elLow = document.getElementById("notif-count-low");
+          if (elTriggered) elTriggered.textContent = String(triggeredCount);
+          if (elOffline) elOffline.textContent = String(offlineCount);
+          if (elLow) elLow.textContent = String(lowCount);
+
+          const updated = document.getElementById("notif-last-updated");
+          if (updated) updated.textContent = `Updated ${new Date().toLocaleTimeString()}`;
+
+          const list = document.getElementById("notif-list");
+          if (!list) return;
+
+          if (!alerts.length) {
+            list.innerHTML = `
+              <div class="p-4 rounded-xl bg-surface-container-low text-sm text-on-surface-variant">
+                No active alerts right now.
+              </div>
+            `;
+            return;
+          }
+
+          list.innerHTML = alerts
+            .slice(0, 30)
+            .map((s) => {
+              const meta = iconForSensor(s);
+              const id = escapeHtml(s?.id || "Unknown");
+              const zone = escapeHtml(s?.zone || "");
+              const floor = escapeHtml(s?.floor || "");
+              const battery = Number.isFinite(Number(s?.battery)) ? `${escapeHtml(s.battery)}%` : "—";
+              const last = s?.lastActivity ? escapeHtml(formatTime(s.lastActivity)) : "";
+
+              return `
+                <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/10 cursor-pointer" role="button" tabindex="0" data-nav-route="sensors">
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                      <div class="w-10 h-10 rounded-full bg-${meta.color}/10 text-${meta.color} flex items-center justify-center">
+                        <span class="material-symbols-outlined">${meta.icon}</span>
+                      </div>
+                      <div class="min-w-0">
+                        <p class="text-sm font-bold truncate">Sensor ${id} — ${meta.label}</p>
+                        <p class="text-xs text-on-surface-variant truncate">${[floor ? `Floor ${floor}` : "", zone ? `Zone ${zone}` : ""].filter(Boolean).join(" • ")}</p>
+                      </div>
+                    </div>
+                    <div class="text-right shrink-0">
+                      <p class="text-xs text-on-surface-variant">Battery</p>
+                      <p class="text-sm font-bold">${battery}</p>
+                    </div>
+                  </div>
+                  ${last ? `<p class="mt-2 text-xs text-on-surface-variant">Last activity: ${last}</p>` : ""}
+                </div>
+              `;
+            })
+            .join("");
+        };
+
+        window.addEventListener("storage", (e) => {
+          if (!e || !e.key) return;
+          if (e.key === "legacy-sensors") render();
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

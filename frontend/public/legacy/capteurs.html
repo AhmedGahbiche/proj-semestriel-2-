@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumiere IoT | Sensor Inventory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary": "#4ae176",
+            "surface-container-high": "#222a3d",
+            "on-surface": "#dae2fd",
+            "outline-variant": "#424754",
+            "tertiary-container": "#ca8100",
+            "on-secondary-fixed-variant": "#005321",
+            "inverse-primary": "#005ac2",
+            "secondary-container": "#00b954",
+            "on-primary": "#002e6a",
+            "primary-container": "#4d8eff",
+            "on-surface-variant": "#c2c6d6",
+            "on-tertiary-container": "#3e2400",
+            "on-background": "#dae2fd",
+            "on-secondary-container": "#004119",
+            "secondary-fixed-dim": "#4ae176",
+            "surface-dim": "#0b1326",
+            "on-tertiary": "#472a00",
+            "primary": "#adc6ff",
+            "on-error-container": "#ffdad6",
+            "surface-bright": "#31394d",
+            "outline": "#8c909f",
+            "inverse-surface": "#dae2fd",
+            "surface-variant": "#2d3449",
+            "surface-tint": "#adc6ff",
+            "tertiary": "#ffb95f",
+            "tertiary-fixed-dim": "#ffb95f",
+            "surface": "#0b1326",
+            "inverse-on-surface": "#283044",
+            "primary-fixed": "#d8e2ff",
+            "surface-container-lowest": "#060e20",
+            "background": "#0b1326",
+            "surface-container": "#171f33",
+            "error-container": "#93000a",
+            "on-tertiary-fixed-variant": "#653e00",
+            "on-secondary": "#003915",
+            "on-primary-container": "#00285d",
+            "on-tertiary-fixed": "#2a1700",
+            "on-primary-fixed-variant": "#004395",
+            "surface-container-low": "#131b2e",
+            "secondary-fixed": "#6bff8f",
+            "on-secondary-fixed": "#002109",
+            "on-primary-fixed": "#001a42",
+            "primary-fixed-dim": "#adc6ff",
+            "on-error": "#690005",
+            "surface-container-highest": "#2d3449",
+            "error": "#ffb4ab",
+            "tertiary-fixed": "#ffddb8"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    html.dark { color-scheme: dark; }
+    html.legacy-light { color-scheme: light; }
+    body {
+      background-color: #0b1326;
+      color: #dae2fd;
+      font-family: 'Inter', sans-serif;
+    }
+    .glass-overlay {
+      background: rgba(45, 52, 73, 0.6);
+      backdrop-filter: blur(20px);
+    }
+    .glow-dot {
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .legacy-dropdown-menu[hidden] {
+      display: none;
+    }
+  </style>
+</head>
+<body class="flex overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen py-6 px-4 gap-4 bg-[#131b2e] dark:bg-[#131b2e] w-64 shrink-0 transition-transform duration-200">
+<div class="flex items-center gap-3 px-2 mb-4">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#adc6ff] to-[#4d8eff] flex items-center justify-center shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined text-on-primary" data-icon="hub" data-weight="fill" style="font-variation-settings: 'FILL' 1;">hub</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-[#adc6ff] font-manrope tracking-tighter">Nocturne Protocol</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">IoT Control Center</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope text-sm hover:bg-[#2d3449] hover:text-white rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1" data-icon="dashboard">dashboard</span>
+        Overview
+      </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope text-sm hover:bg-[#2d3449] hover:text-white rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1" data-icon="map">map</span>
+        Floor Map
+      </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#adc6ff] font-bold bg-[#171f33] rounded-lg font-manrope text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="sensors" data-weight="fill" style="font-variation-settings: 'FILL' 1;">sensors</span>
+        Sensor List
+      </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope text-sm hover:bg-[#2d3449] hover:text-white rounded-lg transition-colors group" href="/history" target="_top" rel="noopener">
+<span class="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1" data-icon="history">history</span>
+        History
+      </a>
+</nav>
+<div class="mt-auto px-2">
+<button class="w-full py-3 bg-gradient-to-r from-[#adc6ff] to-[#4d8eff] rounded-full text-[#002e6a] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-primary/20 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add_circle">add_circle</span>
+        Deploy New Trap
+      </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0 bg-[#0b1326]">
+<!-- TopNavBar (injected/standardized) -->
+<header></header>
+
+<section class="flex-1 min-w-0 overflow-auto">
+  <div class="p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
+    <!-- Header & Filter Bar -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div class="space-y-1">
+        <h2 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface">Sensor Inventory</h2>
+        <p id="sensor-summary" class="text-on-surface-variant text-sm font-body">Managing sensors across the building.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="px-5 py-2.5 bg-primary-container/20 hover:bg-primary-container/30 rounded-full text-sm font-semibold flex items-center gap-2 border border-outline-variant/10 transition-colors text-primary" type="button" data-sensor-action="add">
+          <span class="material-symbols-outlined text-sm" data-icon="add_circle">add_circle</span>
+          Add Sensor
+        </button>
+        <button class="px-5 py-2.5 bg-surface-container hover:bg-surface-container-highest rounded-full text-sm font-semibold flex items-center gap-2 border border-outline-variant/10 transition-colors" type="button" data-sensor-action="reset-triggered">
+          <span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+          Reset Triggered
+        </button>
+        <button class="px-5 py-2.5 bg-surface-container hover:bg-surface-container-highest rounded-full text-sm font-semibold flex items-center gap-2 border border-outline-variant/10 transition-colors" type="button" data-sensor-action="export-pdf">
+          <span class="material-symbols-outlined text-sm" data-icon="picture_as_pdf">picture_as_pdf</span>
+          Export PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- Search & Filters Container -->
+    <div class="bg-surface-container-low p-4 rounded-xl flex flex-wrap items-center gap-4 border border-outline-variant/5">
+      <div class="relative flex-1 min-w-[280px]">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg" data-icon="search">search</span>
+        <input id="sensor-search" class="w-full pl-10 pr-4 py-2.5 bg-surface-container-lowest border-none focus:ring-1 focus:ring-primary rounded-lg text-sm text-on-surface placeholder:text-outline/60" placeholder="Search by Trap ID or Zone..." type="text" />
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-outline uppercase tracking-wider px-2">Floor</span>
+        <div class="relative">
+          <button
+            id="sensor-filter-floor-trigger"
+            class="bg-surface-container-lowest text-sm rounded-lg py-2 pl-3 pr-9 text-on-surface border border-outline-variant/20 hover:bg-surface-container-highest/30 transition-colors flex items-center gap-2"
+            type="button"
+            data-sensor-action="filter-floor-trigger"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls="sensor-filter-floor-menu"
+          >
+            <span id="sensor-filter-floor-label" class="whitespace-nowrap">All Floors</span>
+            <span class="material-symbols-outlined text-outline text-lg ml-auto">expand_more</span>
+          </button>
+          <div
+            id="sensor-filter-floor-menu"
+            class="legacy-dropdown-menu absolute z-50 mt-2 w-56 bg-surface-container border border-outline-variant/20 rounded-xl shadow-2xl overflow-hidden"
+            role="listbox"
+            hidden
+          ></div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-outline uppercase tracking-wider px-2">Status</span>
+        <div class="relative">
+          <button
+            id="sensor-filter-status-trigger"
+            class="bg-surface-container-lowest text-sm rounded-lg py-2 pl-3 pr-9 text-on-surface border border-outline-variant/20 hover:bg-surface-container-highest/30 transition-colors flex items-center gap-2"
+            type="button"
+            data-sensor-action="filter-status-trigger"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls="sensor-filter-status-menu"
+          >
+            <span id="sensor-filter-status-label" class="whitespace-nowrap">Any Status</span>
+            <span class="material-symbols-outlined text-outline text-lg ml-auto">expand_more</span>
+          </button>
+          <div
+            id="sensor-filter-status-menu"
+            class="legacy-dropdown-menu absolute z-50 mt-2 w-56 bg-surface-container border border-outline-variant/20 rounded-xl shadow-2xl overflow-hidden"
+            role="listbox"
+            hidden
+          >
+            <button class="w-full text-left px-3 py-2 text-sm text-on-surface hover:bg-surface-container-highest/40" type="button" data-sensor-action="filter-status" data-filter-status="">Any Status</button>
+            <button class="w-full text-left px-3 py-2 text-sm text-on-surface hover:bg-surface-container-highest/40" type="button" data-sensor-action="filter-status" data-filter-status="armed">Armed</button>
+            <button class="w-full text-left px-3 py-2 text-sm text-on-surface hover:bg-surface-container-highest/40" type="button" data-sensor-action="filter-status" data-filter-status="triggered">Triggered</button>
+            <button class="w-full text-left px-3 py-2 text-sm text-on-surface hover:bg-surface-container-highest/40" type="button" data-sensor-action="filter-status" data-filter-status="low_battery">Low Battery</button>
+            <button class="w-full text-left px-3 py-2 text-sm text-on-surface hover:bg-surface-container-highest/40" type="button" data-sensor-action="filter-status" data-filter-status="offline">Offline</button>
+          </div>
+        </div>
+      </div>
+      <button id="sensor-tune" class="p-2.5 bg-surface-container-highest text-primary rounded-lg hover:brightness-125 transition-all" type="button" data-sensor-action="tune">
+        <span class="material-symbols-outlined" data-icon="tune">tune</span>
+      </button>
+    </div>
+
+    <!-- Inventory Table -->
+<div class="bg-surface-container rounded-xl overflow-hidden border border-outline-variant/5">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 text-outline uppercase text-[10px] font-bold tracking-[0.15em]">
+<th class="px-6 py-4">Trap ID</th>
+<th class="px-6 py-4">Floor</th>
+<th class="px-6 py-4">Room/Zone</th>
+<th class="px-6 py-4">Current Status</th>
+<th class="px-6 py-4">Last Activity</th>
+<th class="px-6 py-4">Battery</th>
+<th class="px-6 py-4">Signal</th>
+<th class="px-6 py-4 text-center">Actions</th>
+</tr>
+</thead>
+<tbody id="sensor-table-body" class="divide-y divide-outline-variant/10 text-sm font-body"></tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 flex items-center justify-between bg-surface-container-high/30">
+<p id="sensor-pagination-summary" class="text-xs text-on-surface-variant">Showing <span class="font-bold text-on-surface">0 - 0</span> of <span class="font-bold text-on-surface">0</span> sensors</p>
+<div class="flex items-center gap-1">
+<button id="sensor-page-prev" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest text-outline transition-colors" type="button" data-sensor-action="page-prev">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-on-primary text-xs font-bold" type="button" data-sensor-action="page" data-page="1">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest text-on-surface-variant text-xs" type="button" data-sensor-action="page" data-page="2">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest text-on-surface-variant text-xs" type="button" data-sensor-action="page" data-page="3">3</button>
+<button id="sensor-page-next" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest text-outline transition-colors" type="button" data-sensor-action="page-next">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Metrics Asymmetric Footer -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+<div class="lg:col-span-2 bg-gradient-to-br from-surface-container to-surface-container-low p-6 rounded-xl flex items-center justify-between border border-outline-variant/10">
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest mb-1">Fleet Health</span>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-extrabold font-headline text-secondary">98.2%</span>
+<span class="text-xs text-secondary/80 font-semibold">+0.4%</span>
+</div>
+</div>
+<div class="h-12 w-[1px] bg-outline-variant/20"></div>
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest mb-1">Active Alerts</span>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-extrabold font-headline text-error">14</span>
+<span class="text-xs text-error/80 font-semibold">Priority</span>
+</div>
+</div>
+</div>
+<div class="hidden sm:block">
+<img alt="Fleet health graph" class="h-16 w-auto opacity-50 grayscale hover:grayscale-0 transition-all duration-500" data-alt="Minimalist abstract neon green line chart glowing against a deep navy background, representing data stability" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJcKYdK-3aHDH92rXbhP9liiIR-rjf3-j706YlVGGLERJP1o7JJCczk4zX429AXKzs63VHzwHNBH8sjKV2hWLyMb9tVBEpi_S5s08dT7qvPdDa3rwd2q2NYQqX87qvIZ4QzNZtjeqL00zM5hFrdlrINP2FVpUpDVd0IUE_0LQiSooQxr-F88Ul2J0BiaMKqT22I6yYVEL-cKwx7j1V2O63D1yDDBON4W4mg0yTqAWxnka1TqCKBIh7NRMfMGwNklcnvfYDj0ba3PE"/>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
+<div class="relative z-10">
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest mb-2 block">System Sync</span>
+<div class="flex items-center gap-3">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-surface-container bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-on-secondary-container" data-icon="check">check</span>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-surface-container bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-on-primary-container" data-icon="sync">sync</span>
+</div>
+</div>
+<span class="text-sm font-semibold text-on-surface">Cloud Link Stable</span>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-4 font-mono">LATENCY: 24MS / PACKETS: 100%</p>
+</div>
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl" data-icon="cloud_done">cloud_done</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Mobile Bottom Nav -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#131b2e] flex justify-around items-center px-4 z-50">
+<button class="flex flex-col items-center gap-1 text-slate-400" type="button" data-nav-route="dashboard">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-[#adc6ff]">
+<span class="material-symbols-outlined" data-icon="sensors" data-weight="fill" style="font-variation-settings: 'FILL' 1;">sensors</span>
+<span class="text-[10px] font-bold">Sensors</span>
+</button>
+<button class="w-12 h-12 -mt-8 bg-primary rounded-full shadow-lg shadow-primary/40 flex items-center justify-center text-on-primary" type="button" data-sensor-action="add" aria-label="Add sensor">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400" type="button" data-nav-route="map">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="text-[10px] font-bold">Map</span>
+</button>
+</nav>
+<script src="topbar.js"></script>
+<script src="deploy-modal.js"></script>
+<script>
+  (function () {
+    const STORAGE_KEY = "legacy-sensors";
+    const FLOOR_CONFIG_KEY = "legacy-floors";
+    const HISTORY_KEY = "legacy-history-events";
+    const MAX_HISTORY_EVENTS = 200;
+    const PAGE_SIZE = 5;
+    const MAX_PAGES = 3;
+
+    const $body = document.getElementById("sensor-table-body");
+    const $summary = document.getElementById("sensor-summary");
+    const $paginationSummary = document.getElementById("sensor-pagination-summary");
+    const $search = document.getElementById("sensor-search");
+    const $floorTrigger = document.getElementById("sensor-filter-floor-trigger");
+    const $floorMenu = document.getElementById("sensor-filter-floor-menu");
+    const $floorLabel = document.getElementById("sensor-filter-floor-label");
+    const $statusTrigger = document.getElementById("sensor-filter-status-trigger");
+    const $statusMenu = document.getElementById("sensor-filter-status-menu");
+    const $statusLabel = document.getElementById("sensor-filter-status-label");
+    const $addButtons = document.querySelectorAll('[data-sensor-action="add"]');
+    const $tune = document.getElementById("sensor-tune");
+    const $prev = document.getElementById("sensor-page-prev");
+    const $next = document.getElementById("sensor-page-next");
+    const $pageButtons = document.querySelectorAll('[data-sensor-action="page"]');
+
+    let currentPage = 1;
+    let selectedFloor = "";
+    let selectedStatus = "";
+
+    const normalize = (value) =>
+      (value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+    const nowIso = () => new Date().toISOString();
+
+    const loadHistoryEvents = () => {
+      try {
+        const parsed = JSON.parse(window.localStorage.getItem(HISTORY_KEY) || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    };
+
+    const saveHistoryEvents = (events) => {
+      try {
+        window.localStorage.setItem(HISTORY_KEY, JSON.stringify(events.slice(0, MAX_HISTORY_EVENTS)));
+      } catch {
+        // ignore
+      }
+    };
+
+    const pushHistoryEvent = (payload) => {
+      const entry = {
+        id: `evt-${Date.now()}-${Math.floor(Math.random() * 100000)}`,
+        timestamp: nowIso(),
+        type: payload && payload.type ? String(payload.type) : "info",
+        severity: payload && payload.severity ? String(payload.severity) : "info",
+        title: payload && payload.title ? String(payload.title) : "Event",
+        detail: payload && payload.detail ? String(payload.detail) : "",
+      };
+      const next = [entry, ...loadHistoryEvents()];
+      saveHistoryEvents(next);
+      return entry;
+    };
+
+    const loadSensors = () => {
+      try {
+        const parsed = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    };
+
+    const saveSensors = (sensors) => {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(sensors));
+    };
+
+    const loadFloorConfig = () => {
+      try {
+        const parsed = JSON.parse(window.localStorage.getItem(FLOOR_CONFIG_KEY) || "[]");
+        if (!Array.isArray(parsed)) return [];
+        return parsed
+          .map((f) => ({ id: f && f.id ? String(f.id) : "", label: f && f.label ? String(f.label) : "" }))
+          .filter((f) => f.id && f.label);
+      } catch {
+        return [];
+      }
+    };
+
+    const ensureFloorConfigFallback = () => {
+      const existing = loadFloorConfig();
+      if (existing.length) return;
+      const fallback = [
+        { id: "floor1", label: "Floor 1" },
+        { id: "floor2", label: "Floor 2" },
+        { id: "floor3", label: "Floor 3" },
+        { id: "basement", label: "Basement" },
+      ];
+      try {
+        window.localStorage.setItem(FLOOR_CONFIG_KEY, JSON.stringify(fallback));
+      } catch {
+        // ignore
+      }
+    };
+
+    const getFloorLabels = () => {
+      const cfg = loadFloorConfig();
+      return cfg.map((f) => f.label);
+    };
+
+    const canonicalFloorLabel = (input) => {
+      const labels = getFloorLabels();
+      if (!labels.length) return (input || "").trim();
+      const n = normalize(input);
+      const match = labels.find((l) => normalize(l) === n);
+      return match || (input || "").trim();
+    };
+
+    const seedSensorsIfEmpty = () => {
+      const existing = loadSensors();
+      if (existing.length) return;
+
+      const floorLabels = getFloorLabels();
+      const defaultFloors = floorLabels.length ? floorLabels : ["Floor 1", "Floor 2", "Floor 3", "Basement"];
+      const floor1 = defaultFloors[0] || "Floor 1";
+      const floor2 = defaultFloors[1] || "Floor 2";
+      const floor3 = defaultFloors[2] || "Floor 3";
+      const basement = defaultFloors.find((f) => normalize(f).includes("basement")) || defaultFloors[3] || "Basement";
+
+      const seeded = [
+        {
+          id: "TRP-0922-A",
+          floor: floor2,
+          zone: "Service Corridor",
+          status: "armed",
+          lastActivity: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+          battery: 98,
+          signal: 4,
+        },
+        {
+          id: "TRP-1104-C",
+          floor: floor2,
+          zone: "Kitchen Prep",
+          status: "triggered",
+          lastActivity: new Date(Date.now() - 14 * 1000).toISOString(),
+          battery: 72,
+          signal: 4,
+        },
+        {
+          id: "TRP-0081-F",
+          floor: basement,
+          zone: "HVAC Room 02",
+          status: "low_battery",
+          lastActivity: new Date(Date.now() - 72 * 60 * 1000).toISOString(),
+          battery: 12,
+          signal: 1,
+        },
+        {
+          id: "TRP-4421-K",
+          floor: floor3,
+          zone: "North Corridor",
+          status: "armed",
+          lastActivity: new Date(Date.now() - 42 * 60 * 1000).toISOString(),
+          battery: 88,
+          signal: 3,
+        },
+        {
+          id: "TRP-9021-M",
+          floor: floor1,
+          zone: "Laundry",
+          status: "offline",
+          lastActivity: new Date(Date.now() - 6 * 60 * 60 * 1000 - 4 * 60 * 1000).toISOString(),
+          battery: null,
+          signal: 0,
+        },
+        {
+          id: "TRP-0311-D",
+          floor: floor1,
+          zone: "Main Entrance",
+          status: "armed",
+          lastActivity: new Date(Date.now() - 11 * 60 * 1000).toISOString(),
+          battery: 65,
+          signal: 3,
+        },
+        {
+          id: "TRP-2177-B",
+          floor: floor3,
+          zone: "Storage Closet 3A",
+          status: "armed",
+          lastActivity: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
+          battery: 91,
+          signal: 4,
+        },
+        {
+          id: "TRP-5501-Z",
+          floor: floor2,
+          zone: "Server Closet",
+          status: "triggered",
+          lastActivity: new Date(Date.now() - 4 * 60 * 1000).toISOString(),
+          battery: 54,
+          signal: 2,
+        },
+        {
+          id: "TRP-6612-P",
+          floor: basement,
+          zone: "Maintenance Hall",
+          status: "armed",
+          lastActivity: new Date(Date.now() - 33 * 60 * 1000).toISOString(),
+          battery: 80,
+          signal: 3,
+        },
+        {
+          id: "TRP-7008-Q",
+          floor: floor3,
+          zone: "East Stairwell",
+          status: "low_battery",
+          lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          battery: 18,
+          signal: 2,
+        },
+        {
+          id: "TRP-8110-X",
+          floor: floor2,
+          zone: "Suite 209",
+          status: "armed",
+          lastActivity: new Date(Date.now() - 9 * 60 * 1000).toISOString(),
+          battery: 73,
+          signal: 4,
+        },
+        {
+          id: "TRP-9901-H",
+          floor: floor1,
+          zone: "Reception",
+          status: "offline",
+          lastActivity: new Date(Date.now() - 28 * 60 * 1000).toISOString(),
+          battery: null,
+          signal: 0,
+        },
+      ];
+
+      saveSensors(seeded);
+    };
+
+    const formatRelative = (iso) => {
+      const t = new Date(iso).getTime();
+      if (Number.isNaN(t)) return "-";
+      const diffMs = Date.now() - t;
+      const sec = Math.max(0, Math.floor(diffMs / 1000));
+      if (sec < 60) return `${sec}s ago`;
+      const min = Math.floor(sec / 60);
+      if (min < 60) return `${min}m ago`;
+      const hr = Math.floor(min / 60);
+      if (hr < 24) return `${hr}h ${min % 60}m ago`;
+      const days = Math.floor(hr / 24);
+      return `${days}d ago`;
+    };
+
+    const statusMeta = (status) => {
+      switch (status) {
+        case "triggered":
+          return {
+            label: "Triggered",
+            pill: "bg-error-container text-on-error-container",
+            dot: "bg-error",
+          };
+        case "low_battery":
+          return {
+            label: "Low Battery",
+            pill: "bg-tertiary-container/20 text-tertiary",
+            dot: "bg-tertiary",
+          };
+        case "offline":
+          return {
+            label: "Offline",
+            pill: "bg-outline-variant/20 text-outline",
+            dot: "bg-outline",
+          };
+        case "armed":
+        default:
+          return {
+            label: "Armed",
+            pill: "bg-secondary-container/20 text-secondary",
+            dot: "bg-secondary",
+          };
+      }
+    };
+
+    const batteryMeta = (battery) => {
+      if (battery === null || battery === undefined) {
+        return { icon: "battery_unknown", text: "N/A", className: "text-outline" };
+      }
+      const value = Math.max(0, Math.min(100, Number(battery)));
+      if (value >= 90) return { icon: "battery_full", text: `${value}%`, className: "text-secondary" };
+      if (value >= 70) return { icon: "battery_5_bar", text: `${value}%`, className: "text-primary" };
+      if (value >= 35) return { icon: "battery_3_bar", text: `${value}%`, className: "text-tertiary" };
+      if (value >= 15) return { icon: "battery_2_bar", text: `${value}%`, className: "text-tertiary" };
+      return { icon: "battery_1_bar", text: `${value}%`, className: "text-tertiary" };
+    };
+
+    const signalMeta = (bars) => {
+      const value = Math.max(0, Math.min(4, Number(bars)));
+      if (value >= 4) return { icon: "signal_cellular_4_bar", className: "text-secondary" };
+      if (value === 3) return { icon: "signal_cellular_3_bar", className: "text-secondary" };
+      if (value === 2) return { icon: "signal_cellular_2_bar", className: "text-tertiary" };
+      if (value === 1) return { icon: "signal_cellular_1_bar", className: "text-tertiary" };
+      return { icon: "signal_cellular_connected_no_internet_4_bar", className: "text-error" };
+    };
+
+    const uniqueFloors = (sensors) => {
+      const set = new Set();
+      sensors.forEach((s) => {
+        if (s && s.floor) set.add(String(s.floor));
+      });
+      return Array.from(set).sort((a, b) => a.localeCompare(b));
+    };
+
+    const closeMenus = () => {
+      if ($floorMenu) $floorMenu.hidden = true;
+      if ($statusMenu) $statusMenu.hidden = true;
+      if ($floorTrigger) $floorTrigger.setAttribute("aria-expanded", "false");
+      if ($statusTrigger) $statusTrigger.setAttribute("aria-expanded", "false");
+    };
+
+    const toggleMenu = (which) => {
+      if (which === "floor") {
+        if (!$floorMenu || !$floorTrigger) return;
+        const next = !$floorMenu.hidden;
+        closeMenus();
+        $floorMenu.hidden = next;
+        $floorTrigger.setAttribute("aria-expanded", next ? "false" : "true");
+        return;
+      }
+      if (which === "status") {
+        if (!$statusMenu || !$statusTrigger) return;
+        const next = !$statusMenu.hidden;
+        closeMenus();
+        $statusMenu.hidden = next;
+        $statusTrigger.setAttribute("aria-expanded", next ? "false" : "true");
+      }
+    };
+
+    const setFloorFilter = (value, label) => {
+      selectedFloor = value || "";
+      if ($floorLabel) $floorLabel.textContent = label || "All Floors";
+      currentPage = 1;
+      closeMenus();
+      renderTable();
+    };
+
+    const setStatusFilter = (value, label) => {
+      selectedStatus = value || "";
+      if ($statusLabel) $statusLabel.textContent = label || "Any Status";
+      currentPage = 1;
+      closeMenus();
+      renderTable();
+    };
+
+    const ensureFloorOptions = () => {
+      if (!$floorMenu) return;
+      const sensors = loadSensors();
+      const configured = getFloorLabels();
+      const floors = configured.length ? configured : uniqueFloors(sensors);
+
+      const current = selectedFloor;
+      const items = [
+        '<button class="w-full text-left px-3 py-2 text-sm text-on-surface hover:bg-surface-container-highest/40" type="button" data-sensor-action="filter-floor" data-filter-floor="">All Floors</button>',
+        ...floors.map(
+          (f) =>
+            `<button class="w-full text-left px-3 py-2 text-sm text-on-surface hover:bg-surface-container-highest/40" type="button" data-sensor-action="filter-floor" data-filter-floor="${String(f).replace(/"/g, "&quot;")}">${f}</button>`
+        ),
+      ];
+      $floorMenu.innerHTML = items.join("\n");
+
+      // keep label consistent if current selection is no longer present
+      if (current && !floors.includes(current)) {
+        setFloorFilter("", "All Floors");
+      }
+    };
+
+    const getFilteredSensors = () => {
+      const sensors = loadSensors();
+      const q = normalize($search ? $search.value : "");
+      const floorValue = selectedFloor;
+      const statusValue = selectedStatus;
+
+      return sensors.filter((s) => {
+        if (!s) return false;
+        if (floorValue && String(s.floor) !== floorValue) return false;
+        if (statusValue && String(s.status) !== statusValue) return false;
+
+        if (!q) return true;
+        const hay = normalize([s.id, s.zone, s.floor].filter(Boolean).join(" "));
+        return hay.includes(q);
+      });
+    };
+
+    const clampPage = (page) => {
+      const p = Math.max(1, Math.min(MAX_PAGES, Number(page) || 1));
+      return p;
+    };
+
+    const setActivePageButtons = () => {
+      $pageButtons.forEach((btn) => {
+        const page = Number(btn.getAttribute("data-page"));
+        const active = page === currentPage;
+        btn.classList.toggle("bg-primary", active);
+        btn.classList.toggle("text-on-primary", active);
+        btn.classList.toggle("font-bold", active);
+        btn.classList.toggle("text-on-surface-variant", !active);
+      });
+    };
+
+    const updateSummary = (totalFiltered) => {
+      if ($summary) {
+        $summary.textContent = `Managing ${totalFiltered} sensor${totalFiltered === 1 ? "" : "s"} across the building.`;
+      }
+    };
+
+    const updatePaginationSummary = (start, end, total) => {
+      if (!$paginationSummary) return;
+      $paginationSummary.innerHTML = `Showing <span class="font-bold text-on-surface">${start} - ${end}</span> of <span class="font-bold text-on-surface">${total}</span> sensors`;
+    };
+
+    const renderTable = () => {
+      if (!$body) return;
+
+      const filtered = getFilteredSensors();
+      updateSummary(filtered.length);
+      ensureFloorOptions();
+
+      currentPage = clampPage(currentPage);
+      setActivePageButtons();
+
+      const startIndex = (currentPage - 1) * PAGE_SIZE;
+      const endIndexExclusive = startIndex + PAGE_SIZE;
+      const pageItems = filtered.slice(startIndex, endIndexExclusive);
+
+      const showStart = filtered.length ? Math.min(filtered.length, startIndex + 1) : 0;
+      const showEnd = filtered.length ? Math.min(filtered.length, startIndex + pageItems.length) : 0;
+      updatePaginationSummary(showStart, showEnd, filtered.length);
+
+      if (!pageItems.length) {
+        $body.innerHTML =
+          '<tr><td class="px-6 py-10 text-on-surface-variant" colspan="8">No sensors match your filters.</td></tr>';
+        return;
+      }
+
+      $body.innerHTML = pageItems
+        .map((sensor, idx) => {
+          const zebra = (startIndex + idx) % 2 === 1;
+          const status = statusMeta(sensor.status);
+          const batt = batteryMeta(sensor.battery);
+          const sig = signalMeta(sensor.signal);
+
+          return [
+            `<tr class="${zebra ? "bg-surface-container-low/30" : ""} hover:bg-surface-container-highest/30 transition-colors">`,
+            `  <td class="px-6 py-5 font-mono text-primary font-bold">${sensor.id}</td>`,
+            `  <td class="px-6 py-5 text-on-surface">${sensor.floor}</td>`,
+            `  <td class="px-6 py-5 text-on-surface-variant">${sensor.zone}</td>`,
+            `  <td class="px-6 py-5">`,
+            `    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${status.pill} text-xs font-bold">`,
+            `      <span class="w-1.5 h-1.5 rounded-full ${status.dot} glow-dot"></span>`,
+            `      ${status.label}`,
+            `    </span>`,
+            `  </td>`,
+            `  <td class="px-6 py-5 text-on-surface-variant">${formatRelative(sensor.lastActivity)}</td>`,
+            `  <td class="px-6 py-5">`,
+            `    <div class="flex items-center gap-2 ${batt.className}">`,
+            `      <span class="material-symbols-outlined text-base">${batt.icon}</span>`,
+            `      ${batt.text}`,
+            `    </div>`,
+            `  </td>`,
+            `  <td class="px-6 py-5">`,
+            `    <span class="material-symbols-outlined ${sig.className} text-base">${sig.icon}</span>`,
+            `  </td>`,
+            `  <td class="px-6 py-5 text-center">`,
+            `    <button class="text-outline hover:text-primary transition-colors" type="button" data-sensor-action="delete" data-sensor-id="${sensor.id}" aria-label="Delete sensor">`,
+            `      <span class="material-symbols-outlined">delete</span>`,
+            `    </button>`,
+            `  </td>`,
+            `</tr>`,
+          ].join("\n");
+        })
+        .join("\n");
+    };
+
+    const addSensor = () => {
+      const current = loadSensors();
+
+      const idInput = window.prompt("Trap ID (ex: TRP-1234-A)", `TRP-${Math.floor(1000 + Math.random() * 9000)}-${String.fromCharCode(65 + Math.floor(Math.random() * 26))}`);
+      const id = (idInput || "").trim();
+      if (!id) return;
+      if (current.some((s) => String(s.id).toLowerCase() === id.toLowerCase())) {
+        alert("A sensor with this Trap ID already exists.");
+        return;
+      }
+
+      const floorOptions = getFloorLabels();
+      const floorHelp = floorOptions.length ? ` (available: ${floorOptions.join(", ")})` : "";
+      const floorDefault = floorOptions[1] || floorOptions[0] || "Floor 2";
+      const floor = canonicalFloorLabel((window.prompt(`Floor${floorHelp}`, floorDefault) || "").trim() || floorDefault);
+      const zone = (window.prompt("Room/Zone", "New Zone") || "").trim() || "New Zone";
+      const statusRaw = normalize(window.prompt("Status (armed / triggered / low_battery / offline)", "armed") || "armed");
+      const status = ["armed", "triggered", "low_battery", "offline"].includes(statusRaw) ? statusRaw : "armed";
+
+      const batteryRaw = (window.prompt("Battery % (0-100, optional)", "85") || "").trim();
+      const battery = batteryRaw === "" ? null : Math.max(0, Math.min(100, Number(batteryRaw)));
+
+      const signalRaw = (window.prompt("Signal bars (0-4)", "3") || "").trim();
+      const signal = Math.max(0, Math.min(4, Number(signalRaw || "3")));
+
+      current.unshift({
+        id,
+        floor,
+        zone,
+        status,
+        lastActivity: nowIso(),
+        battery: Number.isFinite(battery) ? battery : null,
+        signal: Number.isFinite(signal) ? signal : 3,
+      });
+      saveSensors(current);
+
+      pushHistoryEvent({
+        type: status === "triggered" ? "triggered" : status === "low_battery" ? "battery" : "sensor",
+        severity: status === "triggered" ? "critical" : status === "low_battery" ? "warning" : "info",
+        title: "Sensor Added",
+        detail: `${zone} · Sensor ${id} · ${floor}`,
+      });
+
+      ensureFloorOptions();
+      currentPage = 1;
+      renderTable();
+    };
+
+    const deleteSensor = (sensorId) => {
+      const sensors = loadSensors();
+      const removed = sensors.find((s) => s && String(s.id) === String(sensorId));
+      const next = sensors.filter((s) => String(s.id) !== String(sensorId));
+      if (next.length === sensors.length) return;
+      saveSensors(next);
+
+      if (removed) {
+        pushHistoryEvent({
+          type: "sensor",
+          severity: "info",
+          title: "Sensor Deleted",
+          detail: `${removed.zone || "Unknown"} · Sensor ${removed.id} · ${removed.floor || "Unknown floor"}`,
+        });
+      } else {
+        pushHistoryEvent({
+          type: "sensor",
+          severity: "info",
+          title: "Sensor Deleted",
+          detail: `Sensor ${sensorId}`,
+        });
+      }
+
+      renderTable();
+    };
+
+    const resetTriggered = () => {
+      const sensors = loadSensors();
+      let resetCount = 0;
+      const next = sensors.map((s) => {
+        if (!s) return s;
+        if (s.status === "triggered") {
+          resetCount += 1;
+          return { ...s, status: "armed", lastActivity: nowIso() };
+        }
+        return s;
+      });
+      saveSensors(next);
+
+      if (resetCount > 0) {
+        pushHistoryEvent({
+          type: "arm",
+          severity: "info",
+          title: "Reset Triggered",
+          detail: `${resetCount} sensor${resetCount === 1 ? "" : "s"} re-armed`,
+        });
+      }
+
+      renderTable();
+    };
+
+    const exportPdf = () => {
+      window.print();
+    };
+
+    const refresh = () => {
+      renderTable();
+    };
+
+    const bindStaticButtons = () => {
+      const resetBtn = document.querySelector('[data-sensor-action="reset-triggered"]');
+      if (resetBtn) resetBtn.addEventListener("click", resetTriggered);
+
+      const exportBtn = document.querySelector('[data-sensor-action="export-pdf"]');
+      if (exportBtn) exportBtn.addEventListener("click", exportPdf);
+    };
+
+    if ($search) {
+      $search.addEventListener("input", () => {
+        currentPage = 1;
+        renderTable();
+      });
+    }
+
+    if ($search && window.location.hash === "#search") {
+      setTimeout(() => {
+        $search.focus();
+      }, 0);
+    }
+
+    if ($floorTrigger) {
+      $floorTrigger.addEventListener("click", () => toggleMenu("floor"));
+    }
+
+    if ($statusTrigger) {
+      $statusTrigger.addEventListener("click", () => toggleMenu("status"));
+    }
+
+    if ($floorMenu) {
+      $floorMenu.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const btn = target.closest("[data-filter-floor]");
+        if (!btn) return;
+        const value = btn.getAttribute("data-filter-floor") || "";
+        const label = btn.textContent || "All Floors";
+        setFloorFilter(value, label);
+      });
+    }
+
+    if ($statusMenu) {
+      $statusMenu.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const btn = target.closest("[data-filter-status]");
+        if (!btn) return;
+        const value = btn.getAttribute("data-filter-status") || "";
+        const label = btn.textContent || "Any Status";
+        setStatusFilter(value, label);
+      });
+    }
+
+    $addButtons.forEach((btn) => btn.addEventListener("click", addSensor));
+
+    if ($tune) {
+      $tune.addEventListener("click", () => {
+        if ($search) $search.focus();
+      });
+    }
+
+    if ($prev) {
+      $prev.addEventListener("click", () => {
+        currentPage = clampPage(currentPage - 1);
+        renderTable();
+      });
+    }
+
+    if ($next) {
+      $next.addEventListener("click", () => {
+        currentPage = clampPage(currentPage + 1);
+        renderTable();
+      });
+    }
+
+    $pageButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        currentPage = clampPage(btn.getAttribute("data-page"));
+        renderTable();
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMenus();
+    });
+
+    document.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      // close dropdowns when clicking outside
+      if (
+        $floorMenu &&
+        !$floorMenu.hidden &&
+        !$floorMenu.contains(target) &&
+        $floorTrigger &&
+        !$floorTrigger.contains(target)
+      ) {
+        closeMenus();
+      }
+      if (
+        $statusMenu &&
+        !$statusMenu.hidden &&
+        !$statusMenu.contains(target) &&
+        $statusTrigger &&
+        !$statusTrigger.contains(target)
+      ) {
+        closeMenus();
+      }
+
+      const deleteBtn = target.closest('[data-sensor-action="delete"]');
+      if (deleteBtn) {
+        const sensorId = deleteBtn.getAttribute("data-sensor-id") || "";
+        if (!sensorId) return;
+        if (window.confirm(`Delete sensor ${sensorId}?`)) {
+          deleteSensor(sensorId);
+        }
+      }
+    });
+
+    ensureFloorConfigFallback();
+    seedSensorsIfEmpty();
+    ensureFloorOptions();
+    bindStaticButtons();
+    renderTable();
+  })();
+</script>
+<script>
+  (function () {
+    const routes = {
+      login: "/",
+      register: "/register",
+      dashboard: "/dashboard",
+      sensors: "/sensors",
+      map: "/map",
+      history: "/history",
+      deploy: "/deploy-trap",
+    };
+
+    const normalize = (value) =>
+      (value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+    const detectRoute = (text) => {
+      const t = normalize(text);
+      if (t.includes("creer un compte") || t.includes("create account") || t.includes("inscription")) return "register";
+      if (t.includes("connectez") || t.includes("connexion") || t.includes("login") || t.includes("logout")) return "login";
+      if (t.includes("overview") || t.includes("dashboard") || t.includes("live status") || t.includes("archive")) return "dashboard";
+      if (t.includes("history") || t.includes("historique") || t.includes("events") || t.includes("event log")) return "history";
+      if (t.includes("floor map") || t.includes(" map") || t === "map") return "map";
+      if (t.includes("sensor") || t.includes("capteur") || t.includes("devices")) return "sensors";
+      return null;
+    };
+
+    const navigateHref = (href) => {
+      try {
+        if (window.top && window.top !== window) {
+          window.top.postMessage({ type: "lumiere:navigate", href }, window.location.origin);
+          return;
+        }
+      } catch {
+        // ignore
+      }
+      window.location.href = href;
+    };
+
+    const goTo = (route) => {
+      const href = routes[route];
+      if (!href) return;
+      navigateHref(href);
+    };
+
+    document.querySelectorAll('a[href="#"]').forEach((anchor) => {
+      const route = detectRoute(anchor.textContent);
+      if (route) {
+        anchor.href = routes[route];
+        anchor.addEventListener("click", (event) => {
+          event.preventDefault();
+          goTo(route);
+        });
+      } else {
+        anchor.addEventListener("click", (event) => {
+          event.preventDefault();
+          alert("Fonctionnalite de demonstration.");
+        });
+      }
+    });
+
+    document.querySelectorAll("form").forEach((form) => {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        goTo("dashboard");
+      });
+    });
+
+    document.querySelectorAll("button").forEach((button) => {
+      if (button.type === "submit") return;
+      if (button.dataset.topbar === "1") return;
+      if (button.dataset.sensorAction) return;
+      if (button.closest("#sensor-table-body")) return;
+
+      if (button.dataset.navRoute) {
+        button.addEventListener("click", () => goTo(button.dataset.navRoute));
+        return;
+      }
+
+      const text = normalize(button.textContent);
+      const route = detectRoute(text);
+
+      if (text.includes("deploy new trap")) {
+        button.addEventListener("click", () => {
+          if (window.openDeployTrapModal) window.openDeployTrapModal();
+        });
+        return;
+      }
+
+      if (text.includes("expand map view")) {
+        button.addEventListener("click", () => goTo("map"));
+        return;
+      }
+
+      if (text.includes("support")) {
+        button.addEventListener("click", () => {
+          window.location.href = "mailto:support@lumiere-iot.local";
+        });
+        return;
+      }
+
+      if (route) {
+        button.addEventListener("click", () => goTo(route));
+        return;
+      }
+
+      button.addEventListener("click", () => {
+        alert("Action executee en mode demo.");
+      });
+    });
+  })();
+</script>
+</body></html>

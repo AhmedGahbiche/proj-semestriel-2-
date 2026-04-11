@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumiere IoT | Floor Map</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary": "#4ae176",
+            "surface-container-high": "#222a3d",
+            "on-surface": "#dae2fd",
+            "outline-variant": "#424754",
+            "tertiary-container": "#ca8100",
+            "on-secondary-fixed-variant": "#005321",
+            "inverse-primary": "#005ac2",
+            "secondary-container": "#00b954",
+            "on-primary": "#002e6a",
+            "primary-container": "#4d8eff",
+            "on-surface-variant": "#c2c6d6",
+            "on-tertiary-container": "#3e2400",
+            "on-background": "#dae2fd",
+            "on-secondary-container": "#004119",
+            "secondary-fixed-dim": "#4ae176",
+            "surface-dim": "#0b1326",
+            "on-tertiary": "#472a00",
+            "primary": "#adc6ff",
+            "on-error-container": "#ffdad6",
+            "surface-bright": "#31394d",
+            "outline": "#8c909f",
+            "inverse-surface": "#dae2fd",
+            "surface-variant": "#2d3449",
+            "surface-tint": "#adc6ff",
+            "tertiary": "#ffb95f",
+            "tertiary-fixed-dim": "#ffb95f",
+            "surface": "#0b1326",
+            "inverse-on-surface": "#283044",
+            "primary-fixed": "#d8e2ff",
+            "surface-container-lowest": "#060e20",
+            "background": "#0b1326",
+            "surface-container": "#171f33",
+            "error-container": "#93000a",
+            "on-tertiary-fixed-variant": "#653e00",
+            "on-secondary": "#003915",
+            "on-primary-container": "#00285d",
+            "on-tertiary-fixed": "#2a1700",
+            "on-primary-fixed-variant": "#004395",
+            "surface-container-low": "#131b2e",
+            "secondary-fixed": "#6bff8f",
+            "on-secondary-fixed": "#002109",
+            "on-primary-fixed": "#001a42",
+            "primary-fixed-dim": "#adc6ff",
+            "on-error": "#690005",
+            "surface-container-highest": "#2d3449",
+            "error": "#ffb4ab",
+            "tertiary-fixed": "#ffddb8"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .marker-pulse::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.4;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+      100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+    }
+    .map-grid {
+      background-size: 40px 40px;
+      background-image: linear-gradient(to right, rgba(173, 198, 255, 0.05) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(173, 198, 255, 0.05) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center w-full px-6 h-16 bg-[#0b1326] dark:bg-[#0b1326] fixed top-0 z-50">
+<div class="flex items-center gap-8">
+<h1 class="text-xl font-bold tracking-tighter text-[#adc6ff] font-headline">Lumiere IoT</h1>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-400 font-manrope font-semibold tracking-tight hover:bg-[#171f33] transition-colors px-3 py-1 rounded-lg" href="#">Live Status</a>
+<a class="text-[#adc6ff] border-b-2 border-[#adc6ff] pb-1 font-manrope font-semibold tracking-tight" href="#">Floor Map</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#adc6ff] p-2 hover:bg-[#171f33] rounded-full transition-colors">notifications</button>
+<button class="material-symbols-outlined text-[#adc6ff] p-2 hover:bg-[#171f33] rounded-full transition-colors">contrast</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile photo" data-alt="professional portrait of a hotel operations manager in a dark suit with a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRGrItyBG59yD4dEBFJeQsSsAHtanCmsU9wd-HiQ-Rm06cnLowaoXkxgbzm_-gZRg_b33zAmPCh1UmZ_GMvRHYEQA5G529yGX6Hn14N_6ZoWG7xVSo8FcBvcNtanfbwgP_Rz1xN1GFbYC_aoDvcUyR2DepStMBQ7UkvAALYIu01GE5wDovvmFH8J8hAgwCXE7_TtVjOhHHLjU8JVKr5hnOmWGu1Z8ivfKltas2ggvrQUpnW0MR658BDT_xeWqOLIE9Xozf4QL8DiM"/>
+</div>
+</div>
+</header>
+<div class="flex h-screen pt-16">
+<!-- Side Navigation Bar (Filtered by Floor/Status) -->
+<aside class="flex flex-col h-full w-64 bg-[#131b2e] dark:bg-[#131b2e] py-6 px-4 gap-8 shrink-0">
+<div>
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">apartment</span>
+</div>
+<div>
+<h2 class="text-[#adc6ff] font-headline text-lg font-black leading-tight">Nocturne Protocol</h2>
+<p class="text-slate-400 text-xs font-manrope">IoT Control Center</p>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-xs font-bold text-outline uppercase tracking-widest px-2 mb-2">Navigation</p>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-[#2d3449] hover:text-white rounded-lg transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-manrope text-sm">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#adc6ff] font-bold bg-[#171f33] rounded-lg translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="map" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-manrope text-sm">Floor Map</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-[#2d3449] hover:text-white rounded-lg transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+<span class="font-manrope text-sm">Sensor List</span>
+</a>
+</div>
+</div>
+<div class="space-y-4">
+<p class="text-xs font-bold text-outline uppercase tracking-widest px-2">Floor Selector</p>
+<div class="grid grid-cols-2 gap-2">
+<button class="bg-surface-container-highest text-on-surface p-2 rounded-lg text-xs font-bold hover:bg-surface-bright transition-colors">Floor 1</button>
+<button class="bg-primary text-on-primary p-2 rounded-lg text-xs font-bold ring-2 ring-primary/20">Floor 2</button>
+<button class="bg-surface-container-highest text-on-surface p-2 rounded-lg text-xs font-bold hover:bg-surface-bright transition-colors">Floor 3</button>
+<button class="bg-surface-container-highest text-on-surface p-2 rounded-lg text-xs font-bold hover:bg-surface-bright transition-colors">Basement</button>
+</div>
+</div>
+<div class="space-y-3">
+<p class="text-xs font-bold text-outline uppercase tracking-widest px-2">Status Filters</p>
+<label class="flex items-center gap-3 px-2 cursor-pointer group">
+<input checked="" class="form-checkbox bg-surface-container-lowest border-none rounded text-secondary ring-0 focus:ring-0" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-on-surface">Armed (12)</span>
+</label>
+<label class="flex items-center gap-3 px-2 cursor-pointer group">
+<input checked="" class="form-checkbox bg-surface-container-lowest border-none rounded text-error ring-0 focus:ring-0" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-on-surface">Triggered (2)</span>
+</label>
+<label class="flex items-center gap-3 px-2 cursor-pointer group">
+<input checked="" class="form-checkbox bg-surface-container-lowest border-none rounded text-tertiary ring-0 focus:ring-0" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-on-surface">Low Battery (3)</span>
+</label>
+</div>
+<button class="mt-auto w-full py-3 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-full text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">
+        Deploy New Trap
+      </button>
+</aside>
+<!-- Main Content: Interactive Map -->
+<main class="flex-1 relative bg-surface-container-lowest overflow-hidden flex items-center justify-center">
+<!-- Background Map Layer -->
+<div class="absolute inset-0 map-grid opacity-30"></div>
+<div class="relative w-[90%] h-[80%] border border-outline-variant/10 bg-surface rounded-xl overflow-hidden shadow-2xl">
+<div class="absolute inset-0 opacity-20 pointer-events-none" data-alt="architectural floor plan blueprint with thin light gray lines on a dark blue tech background, luxury hotel suite layout" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC2jBjEA9nkSuBQczCQmV_1KFeXPxWgn2s7mcO7kki6X7rRjrD4xCn4Iefi0aHeOxVngBm5MQeqItEdA7sfwQWWP6W60F3viCORAVYsBRER9dzUqylg89_H4QaekkxygFOyQcsS5kFex9kKroW4tNPxe5VG0sxYB6hPQYXTM9dSIOEgrbaJUCA2AJq5VxeuRbYhW67DYk8vXl9_ZfDEWPEqd07Y6mfQW8kg69E15CxuM_L_h-M0WER2yl4dAQonFNeIKo-8VRTmqJw'); background-size: cover;"></div>
+<!-- Interactive Markers -->
+<!-- Marker: Kitchen Storage (Triggered) -->
+<div class="absolute top-[25%] left-[15%] group">
+<div class="relative flex items-center justify-center">
+<div class="w-4 h-4 rounded-full bg-error marker-pulse text-error"></div>
+<!-- Tooltip -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-48 p-4 bg-surface-variant/80 backdrop-blur-xl border border-outline-variant/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none shadow-2xl z-20">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-bold text-error uppercase tracking-wider">Triggered!</span>
+<span class="text-[10px] text-on-surface-variant font-mono">ID: NT-042</span>
+</div>
+<h4 class="text-sm font-bold text-on-surface mb-1">Kitchen Storage</h4>
+<p class="text-xs text-on-surface-variant">Battery: 88%</p>
+</div>
+</div>
+</div>
+<!-- Marker: Room 204 (Armed) -->
+<div class="absolute top-[45%] left-[65%] group">
+<div class="relative flex items-center justify-center">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-48 p-4 bg-surface-variant/80 backdrop-blur-xl border border-outline-variant/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none shadow-2xl z-20">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-bold text-secondary uppercase tracking-wider">Armed</span>
+<span class="text-[10px] text-on-surface-variant font-mono">ID: NT-019</span>
+</div>
+<h4 class="text-sm font-bold text-on-surface mb-1">Suite 204 Service Duct</h4>
+<p class="text-xs text-on-surface-variant">Battery: 94%</p>
+</div>
+</div>
+</div>
+<!-- Marker: Laundry Hallway (Low Battery) -->
+<div class="absolute top-[75%] left-[40%] group">
+<div class="relative flex items-center justify-center">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-48 p-4 bg-surface-variant/80 backdrop-blur-xl border border-outline-variant/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none shadow-2xl z-20">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-bold text-tertiary uppercase tracking-wider">Low Battery</span>
+<span class="text-[10px] text-on-surface-variant font-mono">ID: NT-088</span>
+</div>
+<h4 class="text-sm font-bold text-on-surface mb-1">Laundry North Wall</h4>
+<p class="text-xs text-error font-bold">Battery: 12%</p>
+</div>
+</div>
+</div>
+<!-- Marker: Ballroom Entry (Offline) -->
+<div class="absolute top-[60%] left-[82%] group">
+<div class="relative flex items-center justify-center">
+<div class="w-3 h-3 rounded-full bg-outline"></div>
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-48 p-4 bg-surface-variant/80 backdrop-blur-xl border border-outline-variant/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none shadow-2xl z-20">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">Offline</span>
+<span class="text-[10px] text-on-surface-variant font-mono">ID: NT-002</span>
+</div>
+<h4 class="text-sm font-bold text-on-surface mb-1">Ballroom Service Entry</h4>
+<p class="text-xs text-on-surface-variant">Last Seen: 4h ago</p>
+</div>
+</div>
+</div>
+<!-- Map Controls -->
+<div class="absolute bottom-4 right-4 flex flex-col gap-2">
+<button class="w-10 h-10 bg-surface-container-highest hover:bg-surface-bright flex items-center justify-center rounded-lg shadow-lg border border-outline-variant/20">
+<span class="material-symbols-outlined text-on-surface">add</span>
+</button>
+<button class="w-10 h-10 bg-surface-container-highest hover:bg-surface-bright flex items-center justify-center rounded-lg shadow-lg border border-outline-variant/20">
+<span class="material-symbols-outlined text-on-surface">remove</span>
+</button>
+<button class="w-10 h-10 bg-surface-container-highest hover:bg-surface-bright flex items-center justify-center rounded-lg shadow-lg border border-outline-variant/20">
+<span class="material-symbols-outlined text-on-surface">my_location</span>
+</button>
+</div>
+<!-- Legend Overlay -->
+<div class="absolute top-4 left-4 p-4 bg-surface-variant/60 backdrop-blur-md rounded-xl border border-outline-variant/20 flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Armed</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Triggered</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Low Battery</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Offline</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Real-time Event Log Sidebar -->
+<aside class="flex flex-col h-full w-80 bg-[#0b1326] py-6 px-6 shrink-0 border-l border-outline-variant/10">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-headline font-bold text-lg text-primary">Protocol Log</h3>
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+</span>
+</div>
+<div class="flex-1 overflow-y-auto space-y-4 pr-2">
+<!-- Event 1: Triggered -->
+<div class="p-4 bg-surface-container rounded-xl border-l-4 border-error">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold text-error uppercase">Alert: Capture</span>
+<span class="text-[10px] text-on-surface-variant">02:14 PM</span>
+</div>
+<h5 class="text-sm font-semibold text-on-surface mb-1">Trap NT-042 Triggered</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">Movement detected in Kitchen Storage. Dispatching cleaning protocol.</p>
+</div>
+<!-- Event 2: System Health -->
+<div class="p-4 bg-surface-container rounded-xl border-l-4 border-tertiary">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold text-tertiary uppercase">Maintenance</span>
+<span class="text-[10px] text-on-surface-variant">01:50 PM</span>
+</div>
+<h5 class="text-sm font-semibold text-on-surface mb-1">Low Battery Alert</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">Trap NT-088 (Laundry North) reports 12% power. Schedule cell replacement.</p>
+</div>
+<!-- Event 3: Success -->
+<div class="p-4 bg-surface-container rounded-xl border-l-4 border-secondary">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold text-secondary uppercase">System OK</span>
+<span class="text-[10px] text-on-surface-variant">12:30 PM</span>
+</div>
+<h5 class="text-sm font-semibold text-on-surface mb-1">New Deployment Active</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">Trap NT-019 successfully synced in Room 204 Service Duct.</p>
+</div>
+<!-- Event 4: Info -->
+<div class="p-4 bg-surface-container/40 rounded-xl border-l-4 border-outline-variant">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">Info</span>
+<span class="text-[10px] text-on-surface-variant">11:15 AM</span>
+</div>
+<h5 class="text-sm font-semibold text-on-surface-variant mb-1">Daily Diagnostics Clear</h5>
+<p class="text-xs text-on-surface-variant/60 leading-relaxed">All 24 active nodes passed the morning integrity check.</p>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-outline-variant/10">
+<button class="w-full py-2 flex items-center justify-center gap-2 text-sm text-[#adc6ff] font-bold hover:bg-[#171f33] rounded-lg transition-colors">
+<span class="material-symbols-outlined text-sm">history</span>
+          View Full Archive
+        </button>
+</div>
+</aside>
+</div>
+<!-- Ambient Glow Effects -->
+<div class="fixed top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+<div class="fixed bottom-0 left-0 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+<script>
+  (function () {
+    const routes = {
+      login: "index.html",
+      register: "inscription.html",
+      dashboard: "dashboard.html",
+      sensors: "capteurs.html",
+      settings: "parametres.html",
+      map: "plan.html"
+    };
+
+    const normalize = (value) =>
+      (value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+    const detectRoute = (text) => {
+      const t = normalize(text);
+      if (t.includes("creer un compte") || t.includes("create account") || t.includes("inscription")) return "register";
+      if (t.includes("connectez") || t.includes("connexion") || t.includes("login") || t.includes("logout")) return "login";
+      if (t.includes("overview") || t.includes("dashboard") || t.includes("live status") || t.includes("archive")) return "dashboard";
+      if (t.includes("floor map") || t.includes(" map") || t === "map") return "map";
+      if (t.includes("sensor") || t.includes("capteur") || t.includes("devices")) return "sensors";
+      if (t.includes("setting") || t.includes("configuration") || t.includes("admin")) return "settings";
+      return null;
+    };
+
+    const goTo = (route) => {
+      window.location.href = routes[route];
+    };
+
+    document.querySelectorAll('a[href="#"]').forEach((anchor) => {
+      const route = detectRoute(anchor.textContent);
+      if (route) {
+        anchor.href = routes[route];
+      } else {
+        anchor.addEventListener("click", (event) => {
+          event.preventDefault();
+          alert("Fonctionnalite de demonstration.");
+        });
+      }
+    });
+
+    document.querySelectorAll("form").forEach((form) => {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        goTo("dashboard");
+      });
+    });
+
+    document.querySelectorAll("button").forEach((button) => {
+      if (button.type === "submit") return;
+
+      const text = normalize(button.textContent);
+      const route = detectRoute(text);
+
+      if (text.includes("deploy new trap") || text.includes("expand map view")) {
+        button.addEventListener("click", () => goTo("map"));
+        return;
+      }
+
+      if (text.includes("support")) {
+        button.addEventListener("click", () => {
+          window.location.href = "mailto:support@lumiere-iot.local";
+        });
+        return;
+      }
+
+      if (route) {
+        button.addEventListener("click", () => goTo(route));
+        return;
+      }
+
+      button.addEventListener("click", () => {
+        alert("Action executee en mode demo.");
+      });
+    });
+  })();
+</script>
+</body></html>

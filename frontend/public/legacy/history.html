@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lumiere IoT | History</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#d8e2ff",
+              "surface-bright": "#31394d",
+              "surface-container": "#171f33",
+              "on-surface": "#dae2fd",
+              "tertiary-container": "#ca8100",
+              "on-error": "#690005",
+              background: "#0b1326",
+              "on-surface-variant": "#c2c6d6",
+              "surface-container-low": "#131b2e",
+              "on-primary": "#002e6a",
+              "inverse-on-surface": "#283044",
+              "surface-container-highest": "#2d3449",
+              "on-secondary": "#003915",
+              "surface-dim": "#0b1326",
+              error: "#ffb4ab",
+              "on-error-container": "#ffdad6",
+              tertiary: "#ffb95f",
+              surface: "#0b1326",
+              "primary-container": "#4d8eff",
+              "secondary-container": "#00b954",
+              "on-tertiary": "#472a00",
+              "outline-variant": "#424754",
+              "surface-container-high": "#222a3d",
+              "surface-container-lowest": "#060e20",
+              secondary: "#4ae176",
+              outline: "#8c909f",
+              primary: "#adc6ff",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0b1326;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #2d3449;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+
+  <body class="flex min-h-screen overflow-hidden bg-background text-on-surface font-body">
+    <!-- SideNavBar -->
+    <aside class="hidden md:flex flex-col h-screen py-6 px-4 gap-4 bg-[#131b2e] w-64 shrink-0">
+      <div class="flex items-center gap-3 px-2 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
+          <span class="material-symbols-outlined" style="color:#002e6a;font-variation-settings:'FILL' 1;">hub</span>
+        </div>
+        <div>
+          <h1 class="text-lg font-black text-primary font-headline tracking-tighter">Nocturne Protocol</h1>
+          <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">IoT Control Center</p>
+        </div>
+      </div>
+
+      <nav class="flex-1 flex flex-col gap-1">
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope text-sm hover:bg-[#2d3449] hover:text-white rounded-lg transition-colors group"
+          href="#"
+        >
+          <span class="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1" data-icon="dashboard">dashboard</span>
+          Overview
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope text-sm hover:bg-[#2d3449] hover:text-white rounded-lg transition-colors group"
+          href="#"
+        >
+          <span class="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1" data-icon="map">map</span>
+          Floor Map
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope text-sm hover:bg-[#2d3449] hover:text-white rounded-lg transition-colors group"
+          href="#"
+        >
+          <span class="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1" data-icon="sensors">sensors</span>
+          Sensor List
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-primary font-bold bg-surface-container rounded-lg font-manrope text-sm"
+          href="/history"
+          target="_top"
+          rel="noopener"
+        >
+          <span class="material-symbols-outlined" data-icon="history" style="font-variation-settings:'FILL' 1;">history</span>
+          History
+        </a>
+      </nav>
+
+      <div class="mt-auto px-2">
+        <button
+          class="w-full py-3 bg-gradient-to-r from-primary to-primary-container rounded-full text-on-primary text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all"
+        >
+          <span class="material-symbols-outlined text-sm" data-icon="add_circle">add_circle</span>
+          Deploy New Trap
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col min-w-0 bg-[#0b1326]">
+      <!-- TopNavBar (injected/standardized) -->
+      <header></header>
+
+      <section class="flex-1 min-w-0 overflow-auto">
+        <div class="p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
+          <div class="space-y-2">
+            <h1 class="text-3xl lg:text-4xl font-extrabold text-on-surface font-headline tracking-tight">History</h1>
+            <p class="text-on-surface-variant">Review protocol activity across sensors, floors, and deployments.</p>
+          </div>
+
+          <!-- Summary cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-surface-container rounded-xl border border-outline-variant/10 p-5">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Today</p>
+              <p id="history-stat-today" class="mt-3 text-3xl font-black font-headline">0</p>
+              <p class="mt-1 text-sm text-on-surface-variant">Events recorded</p>
+            </div>
+            <div class="bg-surface-container rounded-xl border border-outline-variant/10 p-5">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Triggered</p>
+              <p id="history-stat-triggered" class="mt-3 text-3xl font-black font-headline text-error">0</p>
+              <p class="mt-1 text-sm text-on-surface-variant">Critical alerts</p>
+            </div>
+            <div class="bg-surface-container rounded-xl border border-outline-variant/10 p-5">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Low Battery</p>
+              <p id="history-stat-low-battery" class="mt-3 text-3xl font-black font-headline text-tertiary">0</p>
+              <p class="mt-1 text-sm text-on-surface-variant">Sensors need attention</p>
+            </div>
+            <div class="bg-surface-container rounded-xl border border-outline-variant/10 p-5">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Deployments</p>
+              <p id="history-stat-deploy" class="mt-3 text-3xl font-black font-headline">0</p>
+              <p class="mt-1 text-sm text-on-surface-variant">New trap provisioned</p>
+            </div>
+          </div>
+
+          <!-- History list -->
+          <div class="bg-surface-container rounded-2xl border border-outline-variant/10 overflow-hidden">
+            <div class="flex items-center justify-between gap-4 px-6 py-5 border-b border-outline-variant/10">
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary">history</span>
+                <div>
+                  <p class="font-bold font-headline">Event Log</p>
+                  <p id="history-event-subtitle" class="text-sm text-on-surface-variant">Most recent events</p>
+                </div>
+              </div>
+              <div id="history-timezone" class="text-xs text-on-surface-variant">UTC</div>
+            </div>
+
+            <div id="history-event-list" class="divide-y divide-outline-variant/10"></div>
+          </div>
+
+          <p id="history-tip" class="text-xs text-on-surface-variant"></p>
+        </div>
+      </section>
+    </main>
+
+    <script src="topbar.js"></script>
+    <script>
+      (function () {
+        const HISTORY_KEY = "legacy-history-events";
+        const SENSORS_KEY = "legacy-sensors";
+        const MAX_EVENTS = 200;
+
+        const $today = document.getElementById("history-stat-today");
+        const $triggered = document.getElementById("history-stat-triggered");
+        const $lowBattery = document.getElementById("history-stat-low-battery");
+        const $deploy = document.getElementById("history-stat-deploy");
+        const $eventList = document.getElementById("history-event-list");
+        const $subtitle = document.getElementById("history-event-subtitle");
+        const $tip = document.getElementById("history-tip");
+        const $tz = document.getElementById("history-timezone");
+
+        const safeJson = (value, fallback) => {
+          try {
+            const parsed = JSON.parse(value);
+            return parsed ?? fallback;
+          } catch {
+            return fallback;
+          }
+        };
+
+        const loadSensors = () => {
+          const parsed = safeJson(window.localStorage.getItem(SENSORS_KEY) || "[]", []);
+          return Array.isArray(parsed) ? parsed : [];
+        };
+
+        const loadEvents = () => {
+          const parsed = safeJson(window.localStorage.getItem(HISTORY_KEY) || "[]", []);
+          return Array.isArray(parsed) ? parsed : [];
+        };
+
+        const saveEvents = (events) => {
+          window.localStorage.setItem(HISTORY_KEY, JSON.stringify(events.slice(0, MAX_EVENTS)));
+        };
+
+        const toIso = (d) => (d instanceof Date ? d.toISOString() : new Date().toISOString());
+
+        const startOfTodayLocal = () => {
+          const d = new Date();
+          d.setHours(0, 0, 0, 0);
+          return d.getTime();
+        };
+
+        const seedEventsIfEmpty = () => {
+          const existing = loadEvents();
+          if (existing.length) return;
+
+          const now = new Date();
+          const base = startOfTodayLocal();
+          const mk = (mins, payload) => ({
+            id: `evt-${base}-${mins}-${Math.floor(Math.random() * 100000)}`,
+            timestamp: new Date(base + mins * 60 * 1000).toISOString(),
+            ...payload,
+          });
+
+          const seeded = [
+            mk(495, {
+              type: "triggered",
+              severity: "critical",
+              title: "Trap Triggered",
+              detail: "Kitchen Prep · Sensor TRP-5501-Z · Floor 2",
+            }),
+            mk(510, {
+              type: "battery",
+              severity: "warning",
+              title: "Battery Warning",
+              detail: "Maintenance Hall · Sensor TRP-7008-Q · Floor 3",
+            }),
+            mk(547, {
+              type: "arm",
+              severity: "info",
+              title: "Arm State Updated",
+              detail: "Main Entrance · Sensor TRP-0311-D · Floor 1",
+            }),
+            mk(591, {
+              type: "sync",
+              severity: "info",
+              title: "Telemetry Sync",
+              detail: "All floors · 12 sensors",
+            }),
+            mk(640, {
+              type: "deploy",
+              severity: "info",
+              title: "Deploy Completed",
+              detail: "New trap provisioned · Sensor TRP-0922-A",
+            }),
+          ].reverse();
+
+          saveEvents(seeded);
+        };
+
+        const pad2 = (n) => String(n).padStart(2, "0");
+        const formatTimeLocal = (iso) => {
+          const d = new Date(iso);
+          if (Number.isNaN(d.getTime())) return "--:--";
+          return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+        };
+
+        const resolveLocalTimeZoneLabel = () => {
+          try {
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            return tz || "Local";
+          } catch {
+            return "Local";
+          }
+        };
+
+        const badgeMeta = (severity) => {
+          switch (severity) {
+            case "critical":
+              return { label: "Critical", cls: "bg-error/20 text-error" };
+            case "warning":
+              return { label: "Warning", cls: "bg-tertiary/15 text-tertiary" };
+            case "info":
+            default:
+              return { label: "Info", cls: "bg-secondary/20 text-secondary" };
+          }
+        };
+
+        const escapeHtml = (value) =>
+          String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
+
+        const renderStats = () => {
+          const events = loadEvents();
+          const sensors = loadSensors();
+          const todayStart = startOfTodayLocal();
+          const todayEvents = events.filter((e) => new Date(e.timestamp).getTime() >= todayStart).length;
+
+          const triggeredCount = sensors.filter((s) => s && s.status === "triggered").length;
+          const lowBatteryCount = sensors.filter((s) => s && s.status === "low_battery").length;
+          const deployCount = events.filter((e) => e && e.type === "deploy" && new Date(e.timestamp).getTime() >= todayStart).length;
+
+          if ($today) $today.textContent = String(todayEvents);
+          if ($triggered) $triggered.textContent = String(triggeredCount);
+          if ($lowBattery) $lowBattery.textContent = String(lowBatteryCount);
+          if ($deploy) $deploy.textContent = String(deployCount);
+        };
+
+        const renderEvents = () => {
+          if (!$eventList) return;
+          const events = loadEvents().slice().sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+          if ($subtitle) {
+            $subtitle.textContent = events.length ? `Most recent events (${events.length})` : "No events yet";
+          }
+          if ($tz) $tz.textContent = resolveLocalTimeZoneLabel();
+
+          if (!events.length) {
+            $eventList.innerHTML = '<div class="px-6 py-8 text-sm text-on-surface-variant">No events have been recorded yet.</div>';
+            return;
+          }
+
+          $eventList.innerHTML = events
+            .slice(0, 50)
+            .map((e) => {
+              const meta = badgeMeta(e.severity);
+              const title = escapeHtml(e.title || "Event");
+              const detail = escapeHtml(e.detail || "");
+              const time = formatTimeLocal(e.timestamp);
+              return [
+                '<div class="px-6 py-4 flex items-start justify-between gap-6">',
+                '  <div class="min-w-0">',
+                `    <p class="text-sm font-bold">${title}</p>`,
+                detail ? `    <p class="text-xs text-on-surface-variant mt-1">${detail}</p>` : "",
+                "  </div>",
+                '  <div class="flex items-center gap-3 shrink-0">',
+                `    <span class="text-[11px] font-bold rounded-full ${meta.cls} px-3 py-1">${meta.label}</span>`,
+                `    <span class="text-xs text-on-surface-variant">${time}</span>`,
+                "  </div>",
+                "</div>",
+              ].join("\n");
+            })
+            .join("\n");
+        };
+
+        const render = () => {
+          renderStats();
+          renderEvents();
+          if ($tip) {
+            $tip.textContent = "This page is now dynamic: stats come from sensors + stored event history.";
+          }
+        };
+
+        const add = (payload) => {
+          const entry = {
+            id: `evt-${Date.now()}-${Math.floor(Math.random() * 100000)}`,
+            timestamp: toIso(new Date()),
+            type: payload && payload.type ? String(payload.type) : "info",
+            severity: payload && payload.severity ? String(payload.severity) : "info",
+            title: payload && payload.title ? String(payload.title) : "Event",
+            detail: payload && payload.detail ? String(payload.detail) : "",
+          };
+          const next = [entry, ...loadEvents()];
+          saveEvents(next);
+          render();
+          return entry;
+        };
+
+        window.LumiereHistory = {
+          add,
+          list: () => loadEvents().slice(),
+        };
+
+        seedEventsIfEmpty();
+        render();
+
+        window.addEventListener("storage", (event) => {
+          if (!event.key) return;
+          if (event.key === HISTORY_KEY || event.key === SENSORS_KEY) {
+            render();
+          }
+        });
+      })();
+    </script>
+    <script>
+      (function () {
+        const routes = {
+          login: "/",
+          register: "/register",
+          dashboard: "/dashboard",
+          sensors: "/sensors",
+          map: "/map",
+          history: "/history",
+          deploy: "/deploy-trap",
+        };
+
+        const normalize = (value) =>
+          (value || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+
+        const detectRoute = (text) => {
+          const t = normalize(text);
+          if (t.includes("creer un compte") || t.includes("create account") || t.includes("inscription")) return "register";
+          if (t.includes("connectez") || t.includes("connexion") || t.includes("login") || t.includes("logout")) return "login";
+          if (t.includes("overview") || t.includes("dashboard") || t.includes("live status") || t.includes("archive")) return "dashboard";
+          if (t.includes("history") || t.includes("historique") || t.includes("events") || t.includes("event log")) return "history";
+          if (t.includes("floor map") || t.includes(" map") || t === "map") return "map";
+          if (t.includes("sensor") || t.includes("capteur") || t.includes("devices")) return "sensors";
+          return null;
+        };
+
+        const navigateHref = (href) => {
+          try {
+            if (window.top && window.top !== window) {
+              window.top.postMessage({ type: "lumiere:navigate", href }, window.location.origin);
+              return;
+            }
+          } catch {
+            // ignore
+          }
+          window.location.href = href;
+        };
+
+        const goTo = (route) => {
+          const href = routes[route];
+          if (!href) return;
+          navigateHref(href);
+        };
+
+        document.querySelectorAll('a[href="#"]').forEach((anchor) => {
+          const route = detectRoute(anchor.textContent);
+          if (route) {
+            anchor.href = routes[route];
+            anchor.addEventListener("click", (event) => {
+              event.preventDefault();
+              goTo(route);
+            });
+          } else {
+            anchor.addEventListener("click", (event) => {
+              event.preventDefault();
+              alert("Fonctionnalite de demonstration.");
+            });
+          }
+        });
+
+        document.querySelectorAll("button").forEach((button) => {
+          if (button.type === "submit") return;
+          if (button.dataset.topbar === "1") return;
+
+          const text = normalize(button.textContent);
+          const route = detectRoute(text);
+
+          if (text.includes("deploy new trap")) {
+            button.addEventListener("click", () => {
+              if (window.openDeployTrapModal) window.openDeployTrapModal();
+            });
+            return;
+          }
+
+          if (route) {
+            button.addEventListener("click", () => goTo(route));
+            return;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

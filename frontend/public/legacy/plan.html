@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumiere IoT | Floor Map</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary": "#4ae176",
+            "surface-container-high": "#222a3d",
+            "on-surface": "#dae2fd",
+            "outline-variant": "#424754",
+            "tertiary-container": "#ca8100",
+            "on-secondary-fixed-variant": "#005321",
+            "inverse-primary": "#005ac2",
+            "secondary-container": "#00b954",
+            "on-primary": "#002e6a",
+            "primary-container": "#4d8eff",
+            "on-surface-variant": "#c2c6d6",
+            "on-tertiary-container": "#3e2400",
+            "on-background": "#dae2fd",
+            "on-secondary-container": "#004119",
+            "secondary-fixed-dim": "#4ae176",
+            "surface-dim": "#0b1326",
+            "on-tertiary": "#472a00",
+            "primary": "#adc6ff",
+            "on-error-container": "#ffdad6",
+            "surface-bright": "#31394d",
+            "outline": "#8c909f",
+            "inverse-surface": "#dae2fd",
+            "surface-variant": "#2d3449",
+            "surface-tint": "#adc6ff",
+            "tertiary": "#ffb95f",
+            "tertiary-fixed-dim": "#ffb95f",
+            "surface": "#0b1326",
+            "inverse-on-surface": "#283044",
+            "primary-fixed": "#d8e2ff",
+            "surface-container-lowest": "#060e20",
+            "background": "#0b1326",
+            "surface-container": "#171f33",
+            "error-container": "#93000a",
+            "on-tertiary-fixed-variant": "#653e00",
+            "on-secondary": "#003915",
+            "on-primary-container": "#00285d",
+            "on-tertiary-fixed": "#2a1700",
+            "on-primary-fixed-variant": "#004395",
+            "surface-container-low": "#131b2e",
+            "secondary-fixed": "#6bff8f",
+            "on-secondary-fixed": "#002109",
+            "on-primary-fixed": "#001a42",
+            "primary-fixed-dim": "#adc6ff",
+            "on-error": "#690005",
+            "surface-container-highest": "#2d3449",
+            "error": "#ffb4ab",
+            "tertiary-fixed": "#ffddb8"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .marker-pulse::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.4;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+      100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+    }
+    .map-grid {
+      background-size: 40px 40px;
+      background-image: linear-gradient(to right, rgba(173, 198, 255, 0.05) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(173, 198, 255, 0.05) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center w-full px-6 h-16 bg-[#0b1326] dark:bg-[#0b1326] fixed top-0 z-50">
+<div class="flex items-center gap-8">
+<h1 class="text-xl font-bold tracking-tighter text-[#adc6ff] font-headline">Lumiere IoT</h1>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-400 font-manrope font-semibold tracking-tight hover:bg-[#171f33] transition-colors px-3 py-1 rounded-lg" href="#">Live Status</a>
+<a class="text-[#adc6ff] border-b-2 border-[#adc6ff] pb-1 font-manrope font-semibold tracking-tight" href="#">Floor Map</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#adc6ff] p-2 hover:bg-[#171f33] rounded-full transition-colors">notifications</button>
+<button class="material-symbols-outlined text-[#adc6ff] p-2 hover:bg-[#171f33] rounded-full transition-colors">contrast</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile photo" data-alt="professional portrait of a hotel operations manager in a dark suit with a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRGrItyBG59yD4dEBFJeQsSsAHtanCmsU9wd-HiQ-Rm06cnLowaoXkxgbzm_-gZRg_b33zAmPCh1UmZ_GMvRHYEQA5G529yGX6Hn14N_6ZoWG7xVSo8FcBvcNtanfbwgP_Rz1xN1GFbYC_aoDvcUyR2DepStMBQ7UkvAALYIu01GE5wDovvmFH8J8hAgwCXE7_TtVjOhHHLjU8JVKr5hnOmWGu1Z8ivfKltas2ggvrQUpnW0MR658BDT_xeWqOLIE9Xozf4QL8DiM"/>
+</div>
+</div>
+</header>
+<div class="flex h-screen pt-16">
+<!-- Side Navigation Bar (Filtered by Floor/Status) -->
+<aside class="flex flex-col h-full w-64 bg-[#131b2e] dark:bg-[#131b2e] py-6 px-4 gap-8 shrink-0">
+<div>
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">apartment</span>
+</div>
+<div>
+<h2 class="text-[#adc6ff] font-headline text-lg font-black leading-tight">Nocturne Protocol</h2>
+<p class="text-slate-400 text-xs font-manrope">IoT Control Center</p>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-xs font-bold text-outline uppercase tracking-widest px-2 mb-2">Navigation</p>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-[#2d3449] hover:text-white rounded-lg transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-manrope text-sm">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#adc6ff] font-bold bg-[#171f33] rounded-lg translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="map" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-manrope text-sm">Floor Map</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-[#2d3449] hover:text-white rounded-lg transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+<span class="font-manrope text-sm">Sensor List</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-[#2d3449] hover:text-white rounded-lg transition-all duration-200" href="/history" target="_top" rel="noopener">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-manrope text-sm">History</span>
+</a>
+ </div>
+</div>
+<div class="space-y-4">
+<p class="text-xs font-bold text-outline uppercase tracking-widest px-2">Floor Selector</p>
+<div class="grid grid-cols-2 gap-2">
+<button class="bg-surface-container-highest text-on-surface p-2 rounded-lg text-xs font-bold hover:bg-surface-bright transition-colors" data-floor="floor1">Floor 1</button>
+<button class="bg-primary text-on-primary p-2 rounded-lg text-xs font-bold ring-2 ring-primary/20" data-floor="floor2">Floor 2</button>
+<button class="bg-surface-container-highest text-on-surface p-2 rounded-lg text-xs font-bold hover:bg-surface-bright transition-colors" data-floor="floor3">Floor 3</button>
+<button class="bg-surface-container-highest text-on-surface p-2 rounded-lg text-xs font-bold hover:bg-surface-bright transition-colors" data-floor="basement">Basement</button>
+</div>
+
+<div class="space-y-2">
+<label class="inline-flex items-center justify-center w-full bg-surface-container-highest text-on-surface p-2 rounded-lg text-[11px] font-bold hover:bg-surface-bright transition-colors cursor-pointer">
+<input id="floor-map-import" class="sr-only" type="file" accept="image/*" multiple />
+Import floor maps
+</label>
+<p id="floor-map-import-status" class="text-[10px] text-on-surface-variant px-1" aria-live="polite"></p>
+</div>
+</div>
+<div class="space-y-3">
+<p class="text-xs font-bold text-outline uppercase tracking-widest px-2">Status Filters</p>
+<label class="flex items-center gap-3 px-2 cursor-pointer group">
+<input checked="" class="form-checkbox bg-surface-container-lowest border-none rounded text-secondary ring-0 focus:ring-0" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-on-surface">Armed (12)</span>
+</label>
+<label class="flex items-center gap-3 px-2 cursor-pointer group">
+<input checked="" class="form-checkbox bg-surface-container-lowest border-none rounded text-error ring-0 focus:ring-0" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-on-surface">Triggered (2)</span>
+</label>
+<label class="flex items-center gap-3 px-2 cursor-pointer group">
+<input checked="" class="form-checkbox bg-surface-container-lowest border-none rounded text-tertiary ring-0 focus:ring-0" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-on-surface">Low Battery (3)</span>
+</label>
+</div>
+<button class="mt-auto w-full py-3 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-full text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">
+        Deploy New Trap
+      </button>
+</aside>
+<!-- Main Content: Interactive Map -->
+<main class="flex-1 relative bg-surface-container-lowest overflow-hidden flex items-center justify-center">
+<!-- Background Map Layer -->
+<div class="absolute inset-0 map-grid opacity-30"></div>
+<div class="relative w-[90%] h-[80%] border border-outline-variant/10 bg-surface rounded-xl overflow-hidden shadow-2xl cursor-grab active:cursor-grabbing" id="map-canvas" style="touch-action: none;">
+<div id="map-content" class="absolute inset-0">
+<div class="absolute inset-0 opacity-20 pointer-events-none" id="map-background" data-alt="architectural floor plan blueprint with thin light gray lines on a dark blue tech background" style="background-image: url('/legacy/maps/floor2.svg'); background-size: cover; background-position: center;"></div>
+<!-- Trap Markers (rendered from localStorage) -->
+<div id="sensor-markers-layer" class="absolute inset-0"></div>
+
+<!-- Hidden demo markers kept only so Tailwind CDN generates the needed classes -->
+<div id="static-demo-markers" class="hidden">
+  <!-- Marker: Kitchen Storage (Triggered) -->
+  <div class="absolute top-[25%] left-[15%] group">
+    <div class="relative flex items-center justify-center">
+      <div class="w-4 h-4 rounded-full bg-error marker-pulse text-error"></div>
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-48 p-4 bg-surface-variant/80 backdrop-blur-xl border border-outline-variant/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none shadow-2xl z-20">
+        <div class="flex justify-between items-start mb-2">
+          <span class="text-[10px] font-bold text-error uppercase tracking-wider">Triggered!</span>
+          <span class="text-[10px] text-on-surface-variant font-mono">ID: NT-042</span>
+        </div>
+        <h4 class="text-sm font-bold text-on-surface mb-1">Kitchen Storage</h4>
+        <p class="text-xs text-on-surface-variant">Battery: 88%</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marker: Room 204 (Armed) -->
+  <div class="absolute top-[45%] left-[65%] group">
+    <div class="relative flex items-center justify-center">
+      <div class="w-3 h-3 rounded-full bg-secondary"></div>
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-48 p-4 bg-surface-variant/80 backdrop-blur-xl border border-outline-variant/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none shadow-2xl z-20">
+        <div class="flex justify-between items-start mb-2">
+          <span class="text-[10px] font-bold text-secondary uppercase tracking-wider">Armed</span>
+          <span class="text-[10px] text-on-surface-variant font-mono">ID: NT-019</span>
+        </div>
+        <h4 class="text-sm font-bold text-on-surface mb-1">Suite 204 Service Duct</h4>
+        <p class="text-xs text-on-surface-variant">Battery: 94%</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marker: Laundry Hallway (Low Battery) -->
+  <div class="absolute top-[75%] left-[40%] group">
+    <div class="relative flex items-center justify-center">
+      <div class="w-3 h-3 rounded-full bg-tertiary"></div>
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-48 p-4 bg-surface-variant/80 backdrop-blur-xl border border-outline-variant/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none shadow-2xl z-20">
+        <div class="flex justify-between items-start mb-2">
+          <span class="text-[10px] font-bold text-tertiary uppercase tracking-wider">Low Battery</span>
+          <span class="text-[10px] text-on-surface-variant font-mono">ID: NT-088</span>
+        </div>
+        <h4 class="text-sm font-bold text-on-surface mb-1">Laundry North Wall</h4>
+        <p class="text-xs text-error font-bold">Battery: 12%</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marker: Ballroom Entry (Offline) -->
+  <div class="absolute top-[60%] left-[82%] group">
+    <div class="relative flex items-center justify-center">
+      <div class="w-3 h-3 rounded-full bg-outline"></div>
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-48 p-4 bg-surface-variant/80 backdrop-blur-xl border border-outline-variant/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none shadow-2xl z-20">
+        <div class="flex justify-between items-start mb-2">
+          <span class="text-[10px] font-bold text-outline uppercase tracking-wider">Offline</span>
+          <span class="text-[10px] text-on-surface-variant font-mono">ID: NT-002</span>
+        </div>
+        <h4 class="text-sm font-bold text-on-surface mb-1">Ballroom Service Entry</h4>
+        <p class="text-xs text-on-surface-variant">Last Seen: 4h ago</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- Map Controls -->
+<div class="absolute bottom-4 right-4 flex flex-col gap-2">
+<button class="w-10 h-10 bg-surface-container-highest hover:bg-surface-bright flex items-center justify-center rounded-lg shadow-lg border border-outline-variant/20" data-map-control="zoom-in">
+<span class="material-symbols-outlined text-on-surface">add</span>
+</button>
+<button class="w-10 h-10 bg-surface-container-highest hover:bg-surface-bright flex items-center justify-center rounded-lg shadow-lg border border-outline-variant/20" data-map-control="zoom-out">
+<span class="material-symbols-outlined text-on-surface">remove</span>
+</button>
+<button class="w-10 h-10 bg-surface-container-highest hover:bg-surface-bright flex items-center justify-center rounded-lg shadow-lg border border-outline-variant/20" data-map-control="recenter">
+<span class="material-symbols-outlined text-on-surface">my_location</span>
+</button>
+</div>
+<!-- Active Floor Label -->
+<div class="absolute top-4 right-4 px-3 py-2 bg-surface-variant/60 backdrop-blur-md rounded-xl border border-outline-variant/20">
+<p id="active-floor-label" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Floor 2</p>
+</div>
+<!-- Legend Overlay -->
+<div class="absolute top-4 left-4 p-4 bg-surface-variant/60 backdrop-blur-md rounded-xl border border-outline-variant/20 flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Armed</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Triggered</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Low Battery</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Offline</span>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Ambient Glow Effects -->
+<div class="fixed top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+<div class="fixed bottom-0 left-0 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+<script src="topbar.js"></script>
+<script src="deploy-modal.js"></script>
+<script>
+  (function () {
+    const routes = {
+      login: "/",
+      register: "/register",
+      dashboard: "/dashboard",
+      sensors: "/sensors",
+      map: "/map",
+      history: "/history",
+      deploy: "/deploy-trap"
+    };
+
+    const normalize = (value) =>
+      (value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+    const detectRoute = (text) => {
+      const t = normalize(text);
+      if (t.includes("creer un compte") || t.includes("create account") || t.includes("inscription")) return "register";
+      if (t.includes("connectez") || t.includes("connexion") || t.includes("login") || t.includes("logout")) return "login";
+      if (t.includes("overview") || t.includes("dashboard") || t.includes("live status") || t.includes("archive")) return "dashboard";
+      if (t.includes("history") || t.includes("historique") || t.includes("events") || t.includes("event log")) return "history";
+      if (t.includes("floor map") || t.includes(" map") || t === "map") return "map";
+      if (t.includes("sensor") || t.includes("capteur") || t.includes("devices")) return "sensors";
+      return null;
+    };
+
+    const navigateHref = (href) => {
+      try {
+        if (window.top && window.top !== window) {
+          window.top.postMessage({ type: "lumiere:navigate", href }, window.location.origin);
+          return;
+        }
+      } catch {
+        // ignore
+      }
+      window.location.href = href;
+    };
+
+    const goTo = (route) => {
+      const href = routes[route];
+      if (!href) return;
+      navigateHref(href);
+    };
+
+    const mapCanvas = document.getElementById("map-canvas");
+    const mapContent = document.getElementById("map-content");
+    const mapBackground = document.getElementById("map-background");
+    const sensorMarkersLayer = document.getElementById("sensor-markers-layer");
+    const pendingTrapKey = "legacy-pending-trap";
+    const floorMapsKey = "legacy-floor-maps";
+    const sensorsKey = "legacy-sensors";
+
+    const params = new URLSearchParams(window.location.search);
+    const deployMode = params.get("deploy") === "1";
+    let zoom = 1;
+    let panX = 0;
+    let panY = 0;
+    let isPanning = false;
+    let didPan = false;
+    let lastClientX = 0;
+    let lastClientY = 0;
+
+    const DEFAULT_FLOOR_MAPS = {
+      floor1: "/legacy/maps/floor1.svg",
+      floor2: "/legacy/maps/floor2.svg",
+      floor3: "/legacy/maps/floor3.svg",
+      basement: "/legacy/maps/basement.svg",
+    };
+
+    const safeJsonParse = (value) => {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return null;
+      }
+    };
+
+    const loadFloorMaps = () => {
+      const saved = safeJsonParse(window.localStorage.getItem(floorMapsKey));
+      // saved maps are expected to be data: URLs, but any string is accepted.
+      return {
+        floor1: saved?.floor1 || "",
+        floor2: saved?.floor2 || "",
+        floor3: saved?.floor3 || "",
+        basement: saved?.basement || "",
+      };
+    };
+
+    const saveFloorMaps = (maps) => {
+      window.localStorage.setItem(floorMapsKey, JSON.stringify(maps));
+    };
+
+    const loadSensors = () => {
+      const parsed = safeJsonParse(window.localStorage.getItem(sensorsKey) || "[]");
+      return Array.isArray(parsed) ? parsed : [];
+    };
+
+    const normalizeFloorId = (value) => {
+      if (!value) return null;
+      const raw = String(value);
+      if (raw === "floor1" || raw === "floor2" || raw === "floor3" || raw === "basement") return raw;
+
+      const t = normalize(raw);
+      if (t.includes("basement") || t.includes("sous sol") || t.includes("sous-sol") || t === "ss") return "basement";
+      if (t.includes("floor1") || t.includes("floor 1") || t.includes("etage 1") || t.includes("niveau 1") || t.includes("level 1")) return "floor1";
+      if (t.includes("floor2") || t.includes("floor 2") || t.includes("etage 2") || t.includes("niveau 2") || t.includes("level 2")) return "floor2";
+      if (t.includes("floor3") || t.includes("floor 3") || t.includes("etage 3") || t.includes("niveau 3") || t.includes("level 3")) return "floor3";
+      return null;
+    };
+
+    const getSensorFloorId = (sensor) => {
+      if (!sensor || typeof sensor !== "object") return null;
+      const s = sensor;
+      return (
+        normalizeFloorId(s.floorId) ||
+        normalizeFloorId(s.location && (s.location.floorId || s.location.floor)) ||
+        normalizeFloorId(s.floor)
+      );
+    };
+
+    const getMarkerTone = (status) => {
+      const s = status ? String(status) : "";
+      if (s === "triggered") return "triggered";
+      if (s === "low_battery") return "low_battery";
+      if (s === "offline") return "offline";
+      return "armed";
+    };
+
+    const renderTrapMarkers = () => {
+      if (deployMode) return;
+      if (!sensorMarkersLayer) return;
+
+      sensorMarkersLayer.innerHTML = "";
+      const sensors = loadSensors();
+      const active = activeFloor;
+
+      for (const sensor of sensors) {
+        const floorId = getSensorFloorId(sensor);
+        if (!floorId || floorId !== active) continue;
+
+        const loc = sensor && sensor.location ? sensor.location : null;
+        if (!loc || loc.type !== "map") continue;
+        const x = Number(loc.x);
+        const y = Number(loc.y);
+        if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+
+        const tone = getMarkerTone(sensor.status);
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "absolute group";
+        wrapper.style.left = `${x}%`;
+        wrapper.style.top = `${y}%`;
+        wrapper.style.transform = "translate(-50%, -50%)";
+
+        const inner = document.createElement("div");
+        inner.className = "relative flex items-center justify-center";
+
+        const dot = document.createElement("div");
+        if (tone === "triggered") dot.className = "w-4 h-4 rounded-full bg-error marker-pulse text-error";
+        else if (tone === "low_battery") dot.className = "w-3 h-3 rounded-full bg-tertiary";
+        else if (tone === "offline") dot.className = "w-3 h-3 rounded-full bg-outline";
+        else dot.className = "w-3 h-3 rounded-full bg-secondary";
+
+        const tooltip = document.createElement("div");
+        tooltip.className =
+          "absolute bottom-6 left-1/2 -translate-x-1/2 w-48 p-4 bg-surface-variant/80 backdrop-blur-xl border border-outline-variant/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none shadow-2xl z-20";
+
+        const header = document.createElement("div");
+        header.className = "flex justify-between items-start mb-2";
+
+        const statusEl = document.createElement("span");
+        statusEl.className = "text-[10px] font-bold uppercase tracking-wider";
+        if (tone === "triggered") statusEl.classList.add("text-error");
+        else if (tone === "low_battery") statusEl.classList.add("text-tertiary");
+        else if (tone === "offline") statusEl.classList.add("text-outline");
+        else statusEl.classList.add("text-secondary");
+        statusEl.textContent = tone === "triggered" ? "Triggered!" : tone === "low_battery" ? "Low Battery" : tone === "offline" ? "Offline" : "Armed";
+
+        const idEl = document.createElement("span");
+        idEl.className = "text-[10px] text-on-surface-variant font-mono";
+        idEl.textContent = "ID: " + (sensor && sensor.id ? String(sensor.id) : "—");
+
+        header.appendChild(statusEl);
+        header.appendChild(idEl);
+
+        const title = document.createElement("h4");
+        title.className = "text-sm font-bold text-on-surface mb-1";
+        title.textContent = sensor && sensor.zone ? String(sensor.zone) : "Trap";
+
+        const meta = document.createElement("p");
+        meta.className = "text-xs text-on-surface-variant";
+        if (sensor && sensor.battery != null && Number.isFinite(Number(sensor.battery))) {
+          const b = Math.round(Number(sensor.battery));
+          meta.textContent = "Battery: " + b + "%";
+          if (tone === "low_battery") meta.className = "text-xs text-error font-bold";
+        } else {
+          meta.textContent = "";
+        }
+
+        tooltip.appendChild(header);
+        tooltip.appendChild(title);
+        if (meta.textContent) tooltip.appendChild(meta);
+
+        inner.appendChild(dot);
+        inner.appendChild(tooltip);
+        wrapper.appendChild(inner);
+        sensorMarkersLayer.appendChild(wrapper);
+      }
+    };
+
+    const getMapUrlForFloor = (floor, maps) => {
+      const value = maps?.[floor];
+      if (value && typeof value === "string") return value;
+      return DEFAULT_FLOOR_MAPS[floor] || DEFAULT_FLOOR_MAPS.floor2;
+    };
+
+    const floorButtons = Array.from(document.querySelectorAll("button[data-floor]"));
+    const importInput = document.getElementById("floor-map-import");
+    const importStatus = document.getElementById("floor-map-import-status");
+    const activeFloorLabel = document.getElementById("active-floor-label");
+    let activeFloor = "floor2";
+    let floorMaps = loadFloorMaps();
+
+    const FLOOR_LABELS = {
+      floor1: "Floor 1",
+      floor2: "Floor 2",
+      floor3: "Floor 3",
+      basement: "Basement",
+    };
+
+    const FLOOR_CONFIG_KEY = "legacy-floors";
+    const persistFloorConfig = () => {
+      const orderedIds = ["floor1", "floor2", "floor3", "basement"];
+      const floors = orderedIds.map((id) => ({ id, label: FLOOR_LABELS[id] || id }));
+      try {
+        window.localStorage.setItem(FLOOR_CONFIG_KEY, JSON.stringify(floors));
+      } catch {
+        // ignore
+      }
+    };
+    persistFloorConfig();
+
+    const setImportStatus = (message) => {
+      if (!importStatus) return;
+      importStatus.textContent = message || "";
+    };
+
+    const applyActiveFloorStyles = () => {
+      floorButtons.forEach((btn) => {
+        const floor = btn.getAttribute("data-floor");
+        const isActive = floor === activeFloor;
+        btn.classList.toggle("bg-primary", isActive);
+        btn.classList.toggle("text-on-primary", isActive);
+        btn.classList.toggle("ring-2", isActive);
+        btn.classList.toggle("ring-primary/20", isActive);
+
+        btn.classList.toggle("bg-surface-container-highest", !isActive);
+        btn.classList.toggle("text-on-surface", !isActive);
+      });
+    };
+
+    const showFloor = (floor) => {
+      activeFloor = floor;
+      applyActiveFloorStyles();
+      if (activeFloorLabel) {
+        activeFloorLabel.textContent = FLOOR_LABELS[activeFloor] || "Floor";
+      }
+      if (mapBackground) {
+        const url = getMapUrlForFloor(activeFloor, floorMaps);
+        mapBackground.style.backgroundImage = `url('${url}')`;
+        mapBackground.style.backgroundSize = "cover";
+        mapBackground.style.backgroundPosition = "center";
+      }
+      renderTrapMarkers();
+    };
+
+    // Init floor selector
+    floorButtons.forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        event.preventDefault();
+        const floor = btn.getAttribute("data-floor");
+        if (!floor) return;
+        showFloor(floor);
+      });
+    });
+    showFloor(activeFloor);
+
+    // Rerender trap markers when sensors update (same tab) or when another tab updates storage.
+    window.addEventListener("legacy-sensors-updated", renderTrapMarkers);
+    window.addEventListener("focus", renderTrapMarkers);
+    window.addEventListener("storage", (e) => {
+      if (e && e.key === sensorsKey) renderTrapMarkers();
+    });
+
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+    const getPanBounds = () => {
+      if (!mapCanvas) return { maxX: 0, maxY: 0 };
+      const w = mapCanvas.clientWidth || 0;
+      const h = mapCanvas.clientHeight || 0;
+      const maxX = Math.max(0, ((zoom - 1) * w) / 2);
+      const maxY = Math.max(0, ((zoom - 1) * h) / 2);
+      const slack = 24;
+      return { maxX: maxX + slack, maxY: maxY + slack };
+    };
+
+    const applyTransform = (withTransition = true) => {
+      if (!mapContent) return;
+      const { maxX, maxY } = getPanBounds();
+      panX = clamp(panX, -maxX, maxX);
+      panY = clamp(panY, -maxY, maxY);
+      mapContent.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+      mapContent.style.transformOrigin = "center center";
+      mapContent.style.transition = withTransition ? "transform 220ms ease" : "none";
+    };
+
+    const inferFloorFromFilename = (filename) => {
+      const t = normalize(filename);
+      if (t.includes("basement") || t.includes("sous sol") || t.includes("sous-sol") || t.includes("ss")) return "basement";
+      if (t.includes("floor 1") || t.includes("floor1") || t.includes("etage 1") || t.includes("niveau 1") || t.includes("level 1")) return "floor1";
+      if (t.includes("floor 2") || t.includes("floor2") || t.includes("etage 2") || t.includes("niveau 2") || t.includes("level 2")) return "floor2";
+      if (t.includes("floor 3") || t.includes("floor3") || t.includes("etage 3") || t.includes("niveau 3") || t.includes("level 3")) return "floor3";
+      return null;
+    };
+
+    const readFileAsDataUrl = (file) =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => reject(new Error("Failed to read file"));
+        reader.readAsDataURL(file);
+      });
+
+    if (importInput) {
+      importInput.addEventListener("change", async () => {
+        const files = Array.from(importInput.files || []);
+        if (!files.length) return;
+
+        setImportStatus("Importing maps...");
+
+        // Determine assignment plan
+        const floorOrder = ["floor1", "floor2", "floor3", "basement"];
+        const assignments = [];
+        const unassigned = [];
+
+        for (const file of files) {
+          const inferred = inferFloorFromFilename(file.name);
+          if (inferred) assignments.push({ file, floor: inferred });
+          else unassigned.push(file);
+        }
+
+        // Any leftover files get assigned in order (or to active floor if only one)
+        if (unassigned.length === 1 && assignments.length === 0) {
+          assignments.push({ file: unassigned[0], floor: activeFloor });
+        } else {
+          const used = new Set(assignments.map((a) => a.floor));
+          for (const file of unassigned) {
+            const nextFloor = floorOrder.find((f) => !used.has(f)) || activeFloor;
+            used.add(nextFloor);
+            assignments.push({ file, floor: nextFloor });
+          }
+        }
+
+        try {
+          const nextMaps = { ...floorMaps };
+          for (const { file, floor } of assignments) {
+            const dataUrl = await readFileAsDataUrl(file);
+            nextMaps[floor] = dataUrl;
+          }
+          floorMaps = nextMaps;
+          saveFloorMaps(floorMaps);
+          showFloor(activeFloor);
+          setImportStatus("Maps imported and saved on this device.");
+        } catch (error) {
+          console.error(error);
+          setImportStatus("Import failed. Please try smaller images.");
+        } finally {
+          // Allow re-importing the same file name
+          importInput.value = "";
+        }
+      });
+    }
+
+    // Initial transform (keeps map centered)
+    applyTransform(true);
+
+    document.querySelectorAll("button[data-map-control]").forEach((button) => {
+      const action = button.getAttribute("data-map-control");
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (action === "zoom-in") zoom = Math.min(1.6, zoom + 0.1);
+        if (action === "zoom-out") zoom = Math.max(0.8, zoom - 0.1);
+        if (action === "recenter") {
+          zoom = 1;
+          panX = 0;
+          panY = 0;
+        }
+        applyTransform(true);
+      });
+    });
+
+    // Pan (drag) to navigate
+    if (mapCanvas) {
+      mapCanvas.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) return;
+        if (!(event.target instanceof Element)) return;
+        if (event.target.closest("button")) return;
+        if (event.target.closest("a")) return;
+        if (event.target.closest("input")) return;
+        if (event.target.closest("label")) return;
+
+        isPanning = true;
+        didPan = false;
+        lastClientX = event.clientX;
+        lastClientY = event.clientY;
+        try {
+          mapCanvas.setPointerCapture(event.pointerId);
+        } catch {
+          // ignore
+        }
+      });
+
+      mapCanvas.addEventListener("pointermove", (event) => {
+        if (!isPanning) return;
+        const dx = event.clientX - lastClientX;
+        const dy = event.clientY - lastClientY;
+        lastClientX = event.clientX;
+        lastClientY = event.clientY;
+
+        if (Math.abs(dx) + Math.abs(dy) > 2) didPan = true;
+        panX += dx;
+        panY += dy;
+        applyTransform(false);
+      });
+
+      const endPan = () => {
+        if (!isPanning) return;
+        isPanning = false;
+        applyTransform(true);
+      };
+
+      mapCanvas.addEventListener("pointerup", endPan);
+      mapCanvas.addEventListener("pointercancel", endPan);
+      mapCanvas.addEventListener("pointerleave", endPan);
+    }
+
+    if (deployMode && mapCanvas) {
+      let selected = null;
+      const marker = document.createElement("div");
+      marker.style.position = "absolute";
+      marker.style.width = "14px";
+      marker.style.height = "14px";
+      marker.style.borderRadius = "9999px";
+      marker.style.background = "#4ae176";
+      marker.style.boxShadow = "0 0 14px #4ae176";
+      marker.style.transform = "translate(-50%, -50%)";
+      marker.style.display = "none";
+      marker.style.zIndex = "40";
+      (mapContent || mapCanvas).appendChild(marker);
+
+      const panel = document.createElement("div");
+      panel.style.position = "absolute";
+      panel.style.left = "16px";
+      panel.style.bottom = "16px";
+      panel.style.padding = "12px";
+      panel.style.borderRadius = "12px";
+      panel.style.background = "rgba(19,27,46,0.92)";
+      panel.style.border = "1px solid rgba(173,198,255,0.28)";
+      panel.style.zIndex = "50";
+      panel.style.maxWidth = "280px";
+      panel.innerHTML = [
+        '<p style="font-size:12px;font-weight:700;color:#dae2fd;margin:0 0 6px 0;">Mode deployment</p>',
+        '<p style="font-size:11px;color:#c2c6d6;margin:0 0 10px 0;">Cliquez sur la carte pour positionner le trap.</p>',
+        '<button id="confirm-deploy-location" style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:7px 10px;border-radius:9999px;border:0;background:linear-gradient(90deg,#adc6ff,#4d8eff);color:#002e6a;" disabled>Confirmer position</button>'
+      ].join("");
+      mapCanvas.appendChild(panel);
+
+      const confirmBtn = panel.querySelector("#confirm-deploy-location");
+
+      mapCanvas.addEventListener("click", (event) => {
+        if (didPan) {
+          didPan = false;
+          return;
+        }
+        if (!(event.target instanceof Element)) return;
+        if (event.target.closest("button")) return;
+
+        const rect = mapCanvas.getBoundingClientRect();
+        const x = Math.min(100, Math.max(0, ((event.clientX - rect.left) / rect.width) * 100));
+        const y = Math.min(100, Math.max(0, ((event.clientY - rect.top) / rect.height) * 100));
+        selected = { x: Number(x.toFixed(2)), y: Number(y.toFixed(2)) };
+        marker.style.left = `${selected.x}%`;
+        marker.style.top = `${selected.y}%`;
+        marker.style.display = "block";
+        if (confirmBtn) confirmBtn.disabled = false;
+      });
+
+      if (confirmBtn) {
+        confirmBtn.addEventListener("click", () => {
+          if (!selected) return;
+          const payload = {
+            trapId: `TRP-${Date.now()}`,
+            createdAt: new Date().toISOString(),
+            location: {
+              type: "map",
+              floor: activeFloor,
+              x: selected.x,
+              y: selected.y,
+            },
+          };
+          window.localStorage.setItem(pendingTrapKey, JSON.stringify(payload));
+          alert("Position enregistree. Trap pret a etre deploye.");
+          window.location.href = "deploy-trap.html";
+        });
+      }
+    }
+
+    document.querySelectorAll('a[href="#"]').forEach((anchor) => {
+      const route = detectRoute(anchor.textContent);
+      if (route) {
+        anchor.href = routes[route];
+        anchor.addEventListener("click", (event) => {
+          event.preventDefault();
+          goTo(route);
+        });
+      } else {
+        anchor.addEventListener("click", (event) => {
+          event.preventDefault();
+          alert("Fonctionnalite de demonstration.");
+        });
+      }
+    });
+
+    document.querySelectorAll("form").forEach((form) => {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        goTo("dashboard");
+      });
+    });
+
+    document.querySelectorAll("button").forEach((button) => {
+      if (button.type === "submit") return;
+      if (button.dataset.topbar === "1") return;
+      if (button.dataset.mapControl) return;
+      if (button.dataset.floor) return;
+
+      const text = normalize(button.textContent);
+      const route = detectRoute(text);
+
+      if (text.includes("deploy new trap")) {
+        button.addEventListener("click", () => {
+          if (window.openDeployTrapModal) window.openDeployTrapModal();
+        });
+        return;
+      }
+
+      if (text.includes("expand map view")) {
+        button.addEventListener("click", () => goTo("map"));
+        return;
+      }
+
+      if (text.includes("support")) {
+        button.addEventListener("click", () => {
+          window.location.href = "mailto:support@lumiere-iot.local";
+        });
+        return;
+      }
+
+      if (route) {
+        button.addEventListener("click", () => goTo(route));
+        return;
+      }
+
+      button.addEventListener("click", () => {
+        alert("Action executee en mode demo.");
+      });
+    });
+  })();
+</script>
+</body></html>

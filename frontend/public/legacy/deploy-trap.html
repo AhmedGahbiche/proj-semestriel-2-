@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html class="dark" lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <title>Deploy New Trap</title>
+</head>
+<body class="bg-[#0b1326] text-[#dae2fd] min-h-screen font-['Inter']">
+  <header></header>
+  <main class="max-w-5xl mx-auto p-8">
+    <a href="dashboard.html" class="text-sm text-[#adc6ff] hover:underline">&larr; Retour au dashboard</a>
+
+    <section class="mt-6 rounded-2xl border border-[#424754]/40 bg-[#171f33] p-8">
+      <h1 class="text-3xl font-black font-['Manrope']">Deploy New Trap</h1>
+      <p class="mt-2 text-sm text-[#c2c6d6]">Choisissez une methode de positionnement pour le nouveau capteur.</p>
+
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        <button id="option-map" class="rounded-2xl border border-[#4d8eff]/50 bg-[#131b2e] p-6 text-left hover:bg-[#222a3d] transition-colors">
+          <p class="text-lg font-bold font-['Manrope']">1. Selection sur la carte</p>
+          <p class="mt-2 text-sm text-[#c2c6d6]">Ouvrir la carte et cliquer un emplacement exact.</p>
+        </button>
+
+        <div class="rounded-2xl border border-[#424754]/40 bg-[#131b2e] p-6">
+          <p class="text-lg font-bold font-['Manrope']">2. Coordonnees manuelles</p>
+          <form id="coords-form" class="mt-4 grid gap-3">
+            <input id="lat" type="number" step="0.000001" min="-90" max="90" placeholder="Latitude (ex: 48.8566)" class="rounded-xl border-none bg-[#060e20]" required />
+            <input id="lng" type="number" step="0.000001" min="-180" max="180" placeholder="Longitude (ex: 2.3522)" class="rounded-xl border-none bg-[#060e20]" required />
+            <button type="submit" class="mt-2 rounded-full bg-gradient-to-r from-[#adc6ff] to-[#4d8eff] px-5 py-2 font-bold text-[#002e6a]">Enregistrer coordonnees</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="deploy-summary" class="mt-8 hidden rounded-xl border border-[#4ae176]/30 bg-[#00b954]/10 p-4">
+        <p class="text-sm"><strong>Position enregistree:</strong> <span id="deploy-summary-value"></span></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="topbar.js"></script>
+  <script>
+    (function () {
+      var KEY = "legacy-pending-trap";
+      var summary = document.getElementById("deploy-summary");
+      var summaryValue = document.getElementById("deploy-summary-value");
+
+      var updateSummary = function () {
+        try {
+          var raw = localStorage.getItem(KEY);
+          if (!raw) return;
+          var data = JSON.parse(raw);
+          if (!data || !data.location) return;
+          summary.hidden = false;
+          if (data.location.type === "coordinates") {
+            summaryValue.textContent = "Coordonnees " + data.location.lat + ", " + data.location.lng;
+          } else if (data.location.type === "map") {
+            var floor = data.location.floor || "";
+            summaryValue.textContent = (floor ? "Carte (" + floor + ") " : "Carte ") + "X=" + data.location.x + "% Y=" + data.location.y + "%";
+          }
+        } catch (_e) {
+          summary.hidden = true;
+        }
+      };
+
+      document.getElementById("option-map").addEventListener("click", function () {
+        window.location.href = "plan.html?deploy=1";
+      });
+
+      document.getElementById("coords-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        var lat = Number(document.getElementById("lat").value);
+        var lng = Number(document.getElementById("lng").value);
+        var payload = {
+          trapId: "TRP-" + Date.now(),
+          createdAt: new Date().toISOString(),
+          location: {
+            type: "coordinates",
+            lat: lat,
+            lng: lng,
+          },
+        };
+        localStorage.setItem(KEY, JSON.stringify(payload));
+        alert("Coordonnees enregistrees. Trap pret a etre deploye.");
+        updateSummary();
+      });
+
+      updateSummary();
+    })();
+  </script>
+</body>
+</html>

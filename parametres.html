@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#d8e2ff",
+              "surface-bright": "#31394d",
+              "surface-container": "#171f33",
+              "on-surface": "#dae2fd",
+              "tertiary-container": "#ca8100",
+              "on-error": "#690005",
+              "background": "#0b1326",
+              "on-surface-variant": "#c2c6d6",
+              "surface-container-low": "#131b2e",
+              "on-primary": "#002e6a",
+              "inverse-on-surface": "#283044",
+              "surface-container-highest": "#2d3449",
+              "on-secondary": "#003915",
+              "surface-dim": "#0b1326",
+              "error": "#ffb4ab",
+              "on-error-container": "#ffdad6",
+              "tertiary": "#ffb95f",
+              "surface": "#0b1326",
+              "primary-container": "#4d8eff",
+              "secondary-container": "#00b954",
+              "on-tertiary": "#472a00",
+              "on-secondary-fixed-variant": "#005321",
+              "on-tertiary-container": "#3e2400",
+              "on-secondary-container": "#004119",
+              "tertiary-fixed-dim": "#ffb95f",
+              "primary": "#adc6ff",
+              "on-secondary-fixed": "#002109",
+              "primary-fixed-dim": "#adc6ff",
+              "inverse-surface": "#dae2fd",
+              "secondary-fixed": "#6bff8f",
+              "on-primary-fixed-variant": "#004395",
+              "on-tertiary-fixed-variant": "#653e00",
+              "surface-tint": "#adc6ff",
+              "outline-variant": "#424754",
+              "surface-container-high": "#222a3d",
+              "surface-container-lowest": "#060e20",
+              "secondary-fixed-dim": "#4ae176",
+              "surface-variant": "#2d3449",
+              "tertiary-fixed": "#ffddb8",
+              "on-primary-container": "#00285d",
+              "on-background": "#dae2fd",
+              "error-container": "#93000a",
+              "on-tertiary-fixed": "#2a1700",
+              "secondary": "#4ae176",
+              "outline": "#8c909f",
+              "inverse-primary": "#005ac2",
+              "on-primary-fixed": "#001a42"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b1326; }
+        ::-webkit-scrollbar-thumb { background: #2d3449; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#0b1326] flex flex-col py-8 z-50">
+<div class="px-8 mb-12">
+<h1 class="text-lg font-black text-[#adc6ff] font-headline">Nocturne Protocol</h1>
+<p class="text-[10px] text-slate-500 font-medium tracking-widest uppercase mt-1">Luxury Concierge</p>
+</div>
+<nav class="flex-1 space-y-2 px-4">
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 hover:text-[#adc6ff] transition-all cursor-pointer hover:translate-x-1 duration-300 font-['Manrope'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 hover:text-[#adc6ff] transition-all cursor-pointer hover:translate-x-1 duration-300 font-['Manrope'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">bolt</span>
+<span>Energy</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 hover:text-[#adc6ff] transition-all cursor-pointer hover:translate-x-1 duration-300 font-['Manrope'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">security</span>
+<span>Security</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 hover:text-[#adc6ff] transition-all cursor-pointer hover:translate-x-1 duration-300 font-['Manrope'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Staff</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl bg-gradient-to-r from-[#adc6ff]/10 to-transparent text-[#adc6ff] font-bold cursor-pointer hover:translate-x-1 duration-300 font-['Manrope'] text-sm" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="px-8 py-4 mb-4">
+<div class="bg-secondary-container/10 border border-secondary-container/20 px-4 py-2 rounded-full flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#4ae176]"></div>
+<span class="text-[11px] font-bold text-secondary tracking-wide">System Status: OK</span>
+</div>
+</div>
+<div class="mt-auto px-4">
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 hover:text-[#adc6ff] transition-all cursor-pointer hover:translate-x-1 duration-300 font-['Manrope'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-8 w-full sticky top-0 z-40 bg-[#0b1326]/80 backdrop-blur-xl h-16 shadow-[0px_0px_32px_rgba(173,198,255,0.06)]">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-[#adc6ff] font-headline">The Nocturne Protocol</span>
+<nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+<a class="text-slate-400 hover:bg-[#2d3449]/50 transition-colors px-2 py-1 rounded" href="#">Overview</a>
+<a class="text-slate-400 hover:bg-[#2d3449]/50 transition-colors px-2 py-1 rounded" href="#">Devices</a>
+<a class="text-[#adc6ff] border-b-2 border-[#adc6ff] pb-1 font-headline" href="#">Configuration</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-full text-[#adc6ff] hover:bg-[#2d3449]/50 active:scale-95 duration-200">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="p-2 rounded-full text-[#adc6ff] hover:bg-[#2d3449]/50 active:scale-95 duration-200 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant/20 mx-2"></div>
+<button class="text-sm font-bold text-[#adc6ff] bg-[#adc6ff]/10 px-4 py-2 rounded-full hover:bg-[#adc6ff]/20 transition-all">Support</button>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-[#adc6ff]/20" data-alt="Professional portrait of a luxury hotel manager in a sharp dark suit against a soft architectural background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC93yLuXm2YHbZ8FC71CzuY_ODEoWcb29XGZabBFVpIFrwSPQBn95ILplJHwQ0L-End_80U1gKtM8fUNcj3V8Ab9YXx02Qu5m7JZF-ugf2hik4TEzROGeo-xCzI4V9G3lAUUjD3xiIAsy4BZISz04pUQxB5FS9V9H9NUG620VcFlk_19hdo2MjV4xVvUhLoPXJo9oilw2d3wfTsbbECQsSPkN3porA_-3BVie4P0bJHk2FVRlzgpT6Sx8WHaypBKq3lmji3wzztdV8"/>
+</div>
+</header>
+<!-- Settings Content -->
+<div class="p-8 max-w-7xl mx-auto">
+<!-- Page Title -->
+<div class="mb-12">
+<h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight mb-2">Configuration</h2>
+<p class="text-on-surface-variant text-lg font-light">Gérez les paramètres globaux de votre écosystème intelligent Lumiere.</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Section: Profil Utilisateur (Asymmetric span) -->
+<section class="md:col-span-4 flex flex-col gap-8">
+<div class="bg-surface-container rounded-full p-8 shadow-[0px_0px_32px_rgba(173,198,255,0.03)] border border-outline-variant/10">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-6">
+<div class="absolute inset-0 bg-primary/20 blur-2xl rounded-full"></div>
+<img alt="Profile Large" class="relative w-32 h-32 rounded-full border-4 border-surface-container-highest object-cover" data-alt="Close-up portrait of a male executive with a focused expression, neutral cinematic lighting in a luxury interior" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmKXGGnhU2FC3SYDz5SgpY4uDJjwBJoblTgc-rHqMBzsxMD-eR132IHWMWlGRlKBYhX3huq20PRJUdWDQGSRR7TS35xetledbMXxh3_0sGNjSUebYzynXJCSbT-K-E9v9EKDfuKa6Tx2r6uNI7Cb9p_XNJGVwITVxN0srp6GRHdkkrYhugYz9puMJ7mnqfqUfNvCdwVwrq-FJ9FauWvWGYmTO5b7VewI5D3VJB9xtRjiMHnx1OdEnOPrf1jvWvACDhGwkDdd8ifZ0"/>
+<button class="absolute bottom-0 right-0 bg-primary text-on-primary p-2 rounded-full shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<h3 class="text-2xl font-bold font-headline text-on-surface">Jean-Marc Valois</h3>
+<p class="text-primary font-medium text-sm tracking-widest uppercase mt-1">Directeur de l'Exploitation</p>
+<div class="mt-8 w-full space-y-4">
+<div class="bg-surface-container-low p-4 rounded-xl text-left">
+<label class="text-[10px] text-on-surface-variant uppercase tracking-widest block mb-1">Email professionnel</label>
+<span class="text-sm font-medium">jm.valois@nocturne-protocol.com</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl text-left">
+<label class="text-[10px] text-on-surface-variant uppercase tracking-widest block mb-1">ID Employé</label>
+<span class="text-sm font-medium">NP-8829-X</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column Stack -->
+<div class="md:col-span-8 flex flex-col gap-8">
+<!-- Section: Notifications (Glassmorphism effect) -->
+<section class="bg-surface-container rounded-full p-8 border border-outline-variant/5">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">notifications_active</span>
+</div>
+<h3 class="text-xl font-bold font-headline">Préférences de Notifications</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
+<div>
+<p class="font-bold text-sm">Alertes Email</p>
+<p class="text-xs text-on-surface-variant">Rapports quotidiens et critiques</p>
+</div>
+<div class="w-12 h-6 bg-secondary-container rounded-full relative cursor-pointer">
+<div class="absolute right-1 top-1 w-4 h-4 bg-on-secondary-fixed rounded-full shadow-sm"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
+<div>
+<p class="font-bold text-sm">Notifications SMS</p>
+<p class="text-xs text-on-surface-variant">Alertes de sécurité uniquement</p>
+</div>
+<div class="w-12 h-6 bg-surface-container-highest rounded-full relative cursor-pointer">
+<div class="absolute left-1 top-1 w-4 h-4 bg-on-surface-variant rounded-full shadow-sm"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
+<div>
+<p class="font-bold text-sm">Maintenance</p>
+<p class="text-xs text-on-surface-variant">État des capteurs IoT</p>
+</div>
+<div class="w-12 h-6 bg-secondary-container rounded-full relative cursor-pointer">
+<div class="absolute right-1 top-1 w-4 h-4 bg-on-secondary-fixed rounded-full shadow-sm"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
+<div>
+<p class="font-bold text-sm">Performance</p>
+<p class="text-xs text-on-surface-variant">Données d'économie d'énergie</p>
+</div>
+<div class="w-12 h-6 bg-surface-container-highest rounded-full relative cursor-pointer">
+<div class="absolute left-1 top-1 w-4 h-4 bg-on-surface-variant rounded-full shadow-sm"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Paramètres du Système (Technical focus) -->
+<section class="bg-surface-container rounded-full p-8 border border-outline-variant/5">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-tertiary/10 rounded-xl flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">settings_input_component</span>
+</div>
+<h3 class="text-xl font-bold font-headline">Paramètres du Système</h3>
+</div>
+<span class="text-[10px] bg-surface-container-highest px-3 py-1 rounded-full text-on-surface-variant font-bold tracking-widest uppercase">Protocol V4.2</span>
+</div>
+<div class="space-y-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-4">
+<label class="block text-sm font-medium text-on-surface-variant">Fréquence d'échantillonnage</label>
+<div class="flex items-center gap-4">
+<input class="flex-1 accent-primary bg-surface-container-lowest h-1.5 rounded-full appearance-none" type="range"/>
+<span class="bg-surface-container-lowest px-3 py-1 rounded text-primary font-bold text-xs">500ms</span>
+</div>
+</div>
+<div class="space-y-4">
+<label class="block text-sm font-medium text-on-surface-variant">Seuil d'alerte thermique</label>
+<div class="flex items-center gap-4">
+<input class="w-20 bg-surface-container-lowest border-none text-center rounded-xl py-2 font-bold text-on-surface focus:ring-2 focus:ring-primary" type="number" value="24"/>
+<span class="text-sm font-medium">°C</span>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant/10 flex flex-wrap gap-4">
+<div class="bg-surface-container-low px-6 py-4 rounded-xl flex-1 min-w-[200px]">
+<p class="text-xs text-on-surface-variant mb-1">Rétention des données</p>
+<p class="font-bold text-lg">90 Jours</p>
+</div>
+<div class="bg-surface-container-low px-6 py-4 rounded-xl flex-1 min-w-[200px]">
+<p class="text-xs text-on-surface-variant mb-1">Mode d'économie</p>
+<p class="font-bold text-lg text-secondary">Optimisé</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Sécurité (High-contrast actions) -->
+<section class="bg-surface-container-high rounded-full p-8 border border-outline-variant/10 relative overflow-hidden">
+<!-- Decorative background element -->
+<div class="absolute -top-12 -right-12 w-48 h-48 bg-primary/5 blur-3xl rounded-full"></div>
+<div class="flex items-center gap-4 mb-8">
+<div class="w-12 h-12 bg-error/10 rounded-xl flex items-center justify-center text-error">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<h3 class="text-xl font-bold font-headline">Sécurité &amp; Accès</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<button class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-xl border border-outline-variant/10 hover:bg-surface-container-highest transition-all group active:scale-[0.98]">
+<div class="text-left">
+<p class="font-bold text-on-surface">Changer le mot de passe</p>
+<p class="text-xs text-on-surface-variant">Dernière modification : il y a 3 mois</p>
+</div>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<button class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-xl border border-outline-variant/10 hover:bg-surface-container-highest transition-all group active:scale-[0.98]">
+<div class="text-left">
+<p class="font-bold text-on-surface">Clés API</p>
+<p class="text-xs text-on-surface-variant">2 clés actives pour les intégrations</p>
+</div>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">key</span>
+</button>
+</div>
+<div class="mt-8 flex justify-end gap-4">
+<button class="px-6 py-2 rounded-full text-sm font-bold text-on-surface hover:bg-surface-container-highest transition-colors">Réinitialiser</button>
+<button class="px-8 py-2 bg-gradient-to-r from-primary to-primary-container rounded-full text-sm font-bold text-on-primary shadow-lg shadow-primary/10 hover:shadow-primary/20 transition-all uppercase tracking-wider">Sauvegarder</button>
+</div>
+</section>
+</div>
+</div>
+<!-- Footer Meta -->
+<footer class="mt-16 pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-on-surface-variant text-xs">© 2024 Lumiere IoT Systems • Propriété du Nocturne Protocol Group</p>
+<div class="flex gap-8 text-xs font-bold text-primary tracking-widest uppercase">
+<a class="hover:text-white transition-colors" href="#">Politique de Confidentialité</a>
+<a class="hover:text-white transition-colors" href="#">Conditions Générales</a>
+</div>
+</footer>
+</div>
+</main>
+<script>
+  (function () {
+    const routes = {
+      login: "index.html",
+      register: "inscription.html",
+      dashboard: "dashboard.html",
+      sensors: "capteurs.html",
+      settings: "parametres.html",
+      map: "plan.html"
+    };
+
+    const normalize = (value) =>
+      (value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+    const detectRoute = (text) => {
+      const t = normalize(text);
+      if (t.includes("creer un compte") || t.includes("create account") || t.includes("inscription")) return "register";
+      if (t.includes("connectez") || t.includes("connexion") || t.includes("login") || t.includes("logout")) return "login";
+      if (t.includes("overview") || t.includes("dashboard") || t.includes("live status") || t.includes("archive")) return "dashboard";
+      if (t.includes("floor map") || t.includes(" map") || t === "map") return "map";
+      if (t.includes("sensor") || t.includes("capteur") || t.includes("devices")) return "sensors";
+      if (t.includes("setting") || t.includes("configuration") || t.includes("admin")) return "settings";
+      return null;
+    };
+
+    const goTo = (route) => {
+      window.location.href = routes[route];
+    };
+
+    document.querySelectorAll('a[href="#"]').forEach((anchor) => {
+      const route = detectRoute(anchor.textContent);
+      if (route) {
+        anchor.href = routes[route];
+      } else {
+        anchor.addEventListener("click", (event) => {
+          event.preventDefault();
+          alert("Fonctionnalite de demonstration.");
+        });
+      }
+    });
+
+    document.querySelectorAll("form").forEach((form) => {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        goTo("dashboard");
+      });
+    });
+
+    document.querySelectorAll("button").forEach((button) => {
+      if (button.type === "submit") return;
+
+      const text = normalize(button.textContent);
+      const route = detectRoute(text);
+
+      if (text.includes("deploy new trap") || text.includes("expand map view")) {
+        button.addEventListener("click", () => goTo("map"));
+        return;
+      }
+
+      if (text.includes("support")) {
+        button.addEventListener("click", () => {
+          window.location.href = "mailto:support@lumiere-iot.local";
+        });
+        return;
+      }
+
+      if (route) {
+        button.addEventListener("click", () => goTo(route));
+        return;
+      }
+
+      button.addEventListener("click", () => {
+        alert("Action executee en mode demo.");
+      });
+    });
+  })();
+</script>
+</body></html>

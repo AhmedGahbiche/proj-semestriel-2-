@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#d8e2ff",
+              "surface-bright": "#31394d",
+              "surface-container": "#171f33",
+              "on-surface": "#dae2fd",
+              "tertiary-container": "#ca8100",
+              "on-error": "#690005",
+              "background": "#0b1326",
+              "on-surface-variant": "#c2c6d6",
+              "surface-container-low": "#131b2e",
+              "on-primary": "#002e6a",
+              "inverse-on-surface": "#283044",
+              "surface-container-highest": "#2d3449",
+              "on-secondary": "#003915",
+              "surface-dim": "#0b1326",
+              "error": "#ffb4ab",
+              "on-error-container": "#ffdad6",
+              "tertiary": "#ffb95f",
+              "surface": "#0b1326",
+              "primary-container": "#4d8eff",
+              "secondary-container": "#00b954",
+              "on-tertiary": "#472a00",
+              "on-secondary-fixed-variant": "#005321",
+              "on-tertiary-container": "#3e2400",
+              "on-secondary-container": "#004119",
+              "tertiary-fixed-dim": "#ffb95f",
+              "primary": "#adc6ff",
+              "on-secondary-fixed": "#002109",
+              "primary-fixed-dim": "#adc6ff",
+              "inverse-surface": "#dae2fd",
+              "secondary-fixed": "#6bff8f",
+              "on-primary-fixed-variant": "#004395",
+              "on-tertiary-fixed-variant": "#653e00",
+              "surface-tint": "#adc6ff",
+              "outline-variant": "#424754",
+              "surface-container-high": "#222a3d",
+              "surface-container-lowest": "#060e20",
+              "secondary-fixed-dim": "#4ae176",
+              "surface-variant": "#2d3449",
+              "tertiary-fixed": "#ffddb8",
+              "on-primary-container": "#00285d",
+              "on-background": "#dae2fd",
+              "error-container": "#93000a",
+              "on-tertiary-fixed": "#2a1700",
+              "secondary": "#4ae176",
+              "outline": "#8c909f",
+              "inverse-primary": "#005ac2",
+              "on-primary-fixed": "#001a42"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(45, 52, 73, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .auth-gradient {
+            background: linear-gradient(135deg, #adc6ff 0%, #4d8eff 100%);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface min-h-screen flex flex-col items-center justify-center p-6 selection:bg-primary selection:text-on-primary">
+<!-- Abstract Background Elements -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+<div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px]"></div>
+<div class="absolute top-[60%] -right-[5%] w-[30%] h-[30%] rounded-full bg-secondary/5 blur-[100px]"></div>
+</div>
+<!-- Registration Content -->
+<main class="w-full max-w-xl z-10">
+<!-- Logo Branding -->
+<div class="flex flex-col items-center mb-10 text-center">
+<div class="w-12 h-12 mb-4 rounded-xl flex items-center justify-center bg-surface-container-high border border-outline-variant/20 shadow-[0px_0px_32px_rgba(173,198,255,0.06)]">
+<span class="material-symbols-outlined text-primary text-3xl">fluid</span>
+</div>
+<h1 class="font-headline text-3xl font-extrabold tracking-tighter text-primary">Lumiere IoT</h1>
+<p class="text-on-surface-variant font-medium mt-2">The Nocturne Protocol: Luxury Hospitality Intelligence</p>
+</div>
+<!-- Registration Card -->
+<div class="glass-panel border border-outline-variant/15 rounded-full overflow-hidden shadow-[0px_0px_64px_rgba(0,0,0,0.4)]">
+<div class="p-8 md:p-12">
+<header class="mb-8">
+<h2 class="font-headline text-2xl font-bold mb-2">Inscription</h2>
+<p class="text-on-surface-variant text-sm">Créez votre accès au tableau de bord haute-fidélité Nocturne.</p>
+</header>
+<form class="space-y-6">
+<!-- Nom Complet -->
+<div class="group">
+<label class="block text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-2 ml-1 transition-colors group-focus-within:text-primary">Nom complet</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg group-focus-within:text-primary transition-colors">person</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/50 focus:ring-1 focus:ring-primary/30 focus:bg-surface-bright transition-all duration-300 outline-none" placeholder="Jean Dupont" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Email Professionnel -->
+<div class="group">
+<label class="block text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-2 ml-1 transition-colors group-focus-within:text-primary">Email professionnel</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg group-focus-within:text-primary transition-colors">mail</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/50 focus:ring-1 focus:ring-primary/30 focus:bg-surface-bright transition-all duration-300 outline-none" placeholder="nom@etablissement.com" type="email"/>
+</div>
+</div>
+<!-- Établissement (Hôtel) -->
+<div class="group">
+<label class="block text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-2 ml-1 transition-colors group-focus-within:text-primary">Établissement</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg group-focus-within:text-primary transition-colors">apartment</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/50 focus:ring-1 focus:ring-primary/30 focus:bg-surface-bright transition-all duration-300 outline-none" placeholder="Le Grand Nocturne" type="text"/>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Mot de passe -->
+<div class="group">
+<label class="block text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-2 ml-1 transition-colors group-focus-within:text-primary">Mot de passe</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg group-focus-within:text-primary transition-colors">lock</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/50 focus:ring-1 focus:ring-primary/30 focus:bg-surface-bright transition-all duration-300 outline-none" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<!-- Confirmer mot de passe -->
+<div class="group">
+<label class="block text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-2 ml-1 transition-colors group-focus-within:text-primary">Confirmation</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg group-focus-within:text-primary transition-colors">verified_user</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/50 focus:ring-1 focus:ring-primary/30 focus:bg-surface-bright transition-all duration-300 outline-none" placeholder="••••••••" type="password"/>
+</div>
+</div>
+</div>
+<!-- Terms & Privacy -->
+<div class="flex items-start space-x-3 pt-2">
+<input class="mt-1 w-4 h-4 rounded bg-surface-container-lowest border-outline-variant/30 text-primary focus:ring-primary/30 transition-all cursor-pointer" id="terms" type="checkbox"/>
+<label class="text-xs text-on-surface-variant leading-relaxed cursor-pointer" for="terms">
+                            J'accepte les <span class="text-primary hover:underline transition-all">conditions d'utilisation</span> et la <span class="text-primary hover:underline transition-all">politique de confidentialité</span> de Lumiere IoT.
+                        </label>
+</div>
+<!-- CTA -->
+<button class="auth-gradient w-full py-4 rounded-full text-on-primary font-headline font-bold text-sm uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.01] active:scale-[0.98] transition-all duration-200 mt-4" type="submit">
+                        Créer mon compte
+                    </button>
+</form>
+<!-- Redirect to Login -->
+<div class="mt-10 pt-8 border-t border-outline-variant/10 text-center">
+<p class="text-on-surface-variant text-sm">
+                        Déjà un compte ? 
+                        <a class="text-primary font-semibold hover:text-primary-container transition-colors ml-1" href="#">Connectez-vous ici</a>
+</p>
+</div>
+</div>
+</div>
+<!-- Footer / Help -->
+<footer class="mt-10 flex flex-col md:flex-row items-center justify-between gap-4 px-4 text-xs text-outline/60 uppercase tracking-widest">
+<div class="flex items-center space-x-4">
+<a class="hover:text-on-surface transition-colors" href="#">Aide</a>
+<a class="hover:text-on-surface transition-colors" href="#">Confidentialité</a>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">security</span>
+<span>Système Sécurisé par Nocturne Protocol</span>
+</div>
+</footer>
+</main>
+<!-- Side Decoration / Brand Imagery (Visual interest for desktop) -->
+<div class="hidden lg:block fixed right-12 top-1/2 -translate-y-1/2 w-72 space-y-8 opacity-40 hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+<div class="bg-surface-container border border-outline-variant/10 p-6 rounded-full">
+<div class="flex items-center space-x-4 mb-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-xs font-bold tracking-widest uppercase">Énergie Optimisée</span>
+</div>
+<div class="h-2 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-3/4 rounded-full"></div>
+</div>
+</div>
+<div class="bg-surface-container border border-outline-variant/10 p-6 rounded-full translate-x-8">
+<div class="flex items-center space-x-4 mb-3">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-xs font-bold tracking-widest uppercase">Sécurité Active</span>
+</div>
+<p class="text-[10px] text-on-surface-variant leading-tight">Cryptage AES-256 standard militaire activé sur tous les flux de données hôteliers.</p>
+</div>
+</div>
+<script>
+  (function () {
+    const routes = {
+      login: "index.html",
+      register: "inscription.html",
+      dashboard: "dashboard.html",
+      sensors: "capteurs.html",
+      settings: "parametres.html",
+      map: "plan.html"
+    };
+
+    const normalize = (value) =>
+      (value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+    const detectRoute = (text) => {
+      const t = normalize(text);
+      if (t.includes("creer un compte") || t.includes("create account") || t.includes("inscription")) return "register";
+      if (t.includes("connectez") || t.includes("connexion") || t.includes("login") || t.includes("logout")) return "login";
+      if (t.includes("overview") || t.includes("dashboard") || t.includes("live status") || t.includes("archive")) return "dashboard";
+      if (t.includes("floor map") || t.includes(" map") || t === "map") return "map";
+      if (t.includes("sensor") || t.includes("capteur") || t.includes("devices")) return "sensors";
+      if (t.includes("setting") || t.includes("configuration") || t.includes("admin")) return "settings";
+      return null;
+    };
+
+    const goTo = (route) => {
+      window.location.href = routes[route];
+    };
+
+    document.querySelectorAll('a[href="#"]').forEach((anchor) => {
+      const route = detectRoute(anchor.textContent);
+      if (route) {
+        anchor.href = routes[route];
+      } else {
+        anchor.addEventListener("click", (event) => {
+          event.preventDefault();
+          alert("Fonctionnalite de demonstration.");
+        });
+      }
+    });
+
+    document.querySelectorAll("form").forEach((form) => {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        goTo("dashboard");
+      });
+    });
+
+    document.querySelectorAll("button").forEach((button) => {
+      if (button.type === "submit") return;
+
+      const text = normalize(button.textContent);
+      const route = detectRoute(text);
+
+      if (text.includes("deploy new trap") || text.includes("expand map view")) {
+        button.addEventListener("click", () => goTo("map"));
+        return;
+      }
+
+      if (text.includes("support")) {
+        button.addEventListener("click", () => {
+          window.location.href = "mailto:support@lumiere-iot.local";
+        });
+        return;
+      }
+
+      if (route) {
+        button.addEventListener("click", () => goTo(route));
+        return;
+      }
+
+      button.addEventListener("click", () => {
+        alert("Action executee en mode demo.");
+      });
+    });
+  })();
+</script>
+</body></html>
