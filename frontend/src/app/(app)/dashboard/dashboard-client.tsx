@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useSyncExternalStore } from "react";
+import { useMemo } from "react";
 import { FloorMapPreview } from "@/components/dashboard/floor-map-preview";
 import { LiveActivity, type DashboardEvent } from "@/components/dashboard/live-activity";
 import { MaterialIcon } from "@/components/ui/material-icon";
@@ -36,78 +36,11 @@ type Snapshot = {
   floorMaps: FloorMaps;
 };
 
-const SENSORS_KEY = "legacy-sensors";
-const EVENTS_KEY = "legacy-history-events";
-const FLOORS_KEY = "legacy-floors";
-const FLOOR_MAPS_KEY = "legacy-floor-maps";
-
 const DEFAULT_FLOOR_MAPS: Required<FloorMaps> = {
   floor1: "/legacy/maps/floor1.svg",
   floor2: "/legacy/maps/floor2.svg",
   floor3: "/legacy/maps/floor3.svg",
   basement: "/legacy/maps/basement.svg",
-};
-
-const safeJsonParse = <T,>(raw: string | null, fallback: T): T => {
-  if (!raw) return fallback;
-  try {
-    const parsed = JSON.parse(raw);
-    return (parsed ?? fallback) as T;
-  } catch {
-    return fallback;
-  }
-};
-
-const EMPTY_SNAPSHOT: Snapshot = { sensors: [], events: [], floors: [], floorMaps: {} };
-
-let lastSnapshotKey = "";
-let lastSnapshot: Snapshot = EMPTY_SNAPSHOT;
-
-const readSnapshotCached = (): Snapshot => {
-  if (typeof window === "undefined") return EMPTY_SNAPSHOT;
-
-  const getRaw = (key: string) => {
-    try {
-      return window.localStorage.getItem(key) || "";
-    } catch {
-      return "";
-    }
-  };
-
-  const rawSensors = getRaw(SENSORS_KEY);
-  const rawEvents = getRaw(EVENTS_KEY);
-  const rawFloors = getRaw(FLOORS_KEY);
-  const rawMaps = getRaw(FLOOR_MAPS_KEY);
-  const nextKey = [rawSensors, rawEvents, rawFloors, rawMaps].join("\u0000");
-
-  if (nextKey === lastSnapshotKey) return lastSnapshot;
-
-  const nextSensors = safeJsonParse<Sensor[]>(rawSensors || "[]", []);
-  const nextEvents = safeJsonParse<DashboardEvent[]>(rawEvents || "[]", []);
-  const nextFloors = safeJsonParse<FloorConfig[]>(rawFloors || "[]", []);
-  const nextMaps = safeJsonParse<FloorMaps>(rawMaps || "{}", {});
-
-  lastSnapshotKey = nextKey;
-  lastSnapshot = {
-    sensors: Array.isArray(nextSensors) ? nextSensors : [],
-    events: Array.isArray(nextEvents) ? nextEvents : [],
-    floors: Array.isArray(nextFloors) ? nextFloors : [],
-    floorMaps: nextMaps && typeof nextMaps === "object" ? nextMaps : {},
-  };
-
-  return lastSnapshot;
-};
-
-const subscribeToLegacyStorage = (onStoreChange: () => void) => {
-  if (typeof window === "undefined") return () => undefined;
-
-  const onStorage = (e: StorageEvent) => {
-    if (!e.key) return;
-    if ([SENSORS_KEY, EVENTS_KEY, FLOORS_KEY, FLOOR_MAPS_KEY].includes(e.key)) onStoreChange();
-  };
-
-  window.addEventListener("storage", onStorage);
-  return () => window.removeEventListener("storage", onStorage);
 };
 
 const startOfDayLocal = (d: Date) => {
@@ -206,8 +139,7 @@ function EfficiencyBars({
   );
 }
 
-export function DashboardClient() {
-  const snapshot = useSyncExternalStore(subscribeToLegacyStorage, readSnapshotCached, () => EMPTY_SNAPSHOT);
+export function DashboardClient({ snapshot }: { snapshot: Snapshot }) {
   const sensors = snapshot.sensors;
   const events = snapshot.events;
   const floors = snapshot.floors;
@@ -338,7 +270,7 @@ export function DashboardClient() {
 
             <div className="mt-5 grid gap-3">
               <Link
-                href="/deploy-trap"
+                href="/deploy-trap/connect"
                 className="rounded-xl bg-[var(--surface-container-low)] px-4 py-3 text-sm font-semibold text-[var(--on-surface)]"
               >
                 Deploy New Trap
@@ -350,7 +282,7 @@ export function DashboardClient() {
                 Reset Triggered
               </Link>
               <Link
-                href="/map"
+                href="/legacy/plan.html"
                 className="rounded-xl bg-[var(--surface-container-low)] px-4 py-3 text-sm font-semibold text-[var(--on-surface)]"
               >
                 Open Floor Map

@@ -12,5 +12,6 @@ export const sideNavItems: NavItem[] = [
 ];
 
 export const topIconLinks: NavItem[] = [
+  { href: "/notifications", label: "Notifications", icon: "notifications" },
   { href: "/search", label: "Search", icon: "search" },
 ];

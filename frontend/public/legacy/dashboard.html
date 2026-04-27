@@ -6,8 +6,6 @@
 <title>Lumiere IoT - Nocturne Protocol</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -73,7 +71,29 @@
         }
     </script>
 <style>
+        @font-face {
+            font-family: "Material Symbols Outlined";
+            font-style: normal;
+            font-weight: 100 700;
+            font-display: swap;
+            src: url("/fonts/material-symbols-outlined.woff2") format("woff2");
+        }
         .material-symbols-outlined {
+            font-family: "Material Symbols Outlined";
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            display: inline-block;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-feature-settings: "liga";
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
         body {
@@ -793,7 +813,7 @@
             map: "/map",
             history: "/history",
             notifications: "/notifications",
-            deploy: "/deploy-trap"
+            deploy: "/deploy-trap/connect"
         };
 
         const normalize = (value) =>
@@ -832,6 +852,15 @@
             if (!href) return;
             navigateHref(href);
         };
+
+        // In the modern Next.js app, Deploy Trap is a real flow (no legacy modal).
+        try {
+            window.openDeployTrapModal = function () {
+                goTo("deploy");
+            };
+        } catch {
+            // ignore
+        }
 
         const hrefForNavTarget = (el) => {
             const routeKey = el.getAttribute("data-nav-route");

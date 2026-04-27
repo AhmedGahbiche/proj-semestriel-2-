@@ -6,8 +6,6 @@
 <title>Lumiere IoT | Floor Map</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
@@ -73,7 +71,45 @@
     }
   </script>
 <style>
+    .embedded header {
+      display: none !important;
+    }
+    .embedded .pt-16 {
+      padding-top: 0 !important;
+    }
+    /* Hide the legacy logo+navigation block when embedded inside the new app shell. */
+    .embedded aside > div:first-child {
+      display: none !important;
+    }
+    /* Hide the legacy "Deploy New Trap" CTA when embedded. */
+    .embedded aside > button {
+      display: none !important;
+    }
+
+    @font-face {
+      font-family: "Material Symbols Outlined";
+      font-style: normal;
+      font-weight: 100 700;
+      font-display: swap;
+      src: url("/fonts/material-symbols-outlined.woff2") format("woff2");
+    }
+
     .material-symbols-outlined {
+      font-family: "Material Symbols Outlined";
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      display: inline-block;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "liga";
       font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
     .marker-pulse::after {
@@ -99,6 +135,18 @@
                         linear-gradient(to bottom, rgba(173, 198, 255, 0.05) 1px, transparent 1px);
     }
   </style>
+
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var embedded = params.get('embedded') === '1' || window.self !== window.top;
+        if (embedded) document.documentElement.classList.add('embedded');
+      } catch (e) {
+        // no-op
+      }
+    })();
+  </script>
 </head>
 <body class="bg-surface text-on-surface font-body overflow-hidden">
 <!-- Top Navigation Bar -->
@@ -361,6 +409,9 @@ Import floor maps
 
     const params = new URLSearchParams(window.location.search);
     const deployMode = params.get("deploy") === "1";
+    const editSensorId = params.get("editSensorId");
+    const editMode = typeof editSensorId === "string" && editSensorId.trim().length > 0;
+    const taggingMode = deployMode || editMode;
     let zoom = 1;
     let panX = 0;
     let panY = 0;
@@ -436,7 +487,7 @@ Import floor maps
     };
 
     const renderTrapMarkers = () => {
-      if (deployMode) return;
+      if (taggingMode) return;
       if (!sensorMarkersLayer) return;
 
       sensorMarkersLayer.innerHTML = "";
@@ -528,6 +579,14 @@ Import floor maps
     const importStatus = document.getElementById("floor-map-import-status");
     const activeFloorLabel = document.getElementById("active-floor-label");
     let activeFloor = "floor2";
+
+    if (editMode) {
+      const sensors = loadSensors();
+      const existing = sensors.find((s) => s && String(s.id || "") === String(editSensorId));
+      const floorId = getSensorFloorId(existing);
+      if (floorId) activeFloor = floorId;
+    }
+
     let floorMaps = loadFloorMaps();
 
     const FLOOR_LABELS = {
@@ -754,8 +813,9 @@ Import floor maps
       mapCanvas.addEventListener("pointerleave", endPan);
     }
 
-    if (deployMode && mapCanvas) {
+    if (taggingMode && mapCanvas) {
       let selected = null;
+
       const marker = document.createElement("div");
       marker.style.position = "absolute";
       marker.style.width = "14px";
@@ -768,6 +828,12 @@ Import floor maps
       marker.style.zIndex = "40";
       (mapContent || mapCanvas).appendChild(marker);
 
+      const heading = editMode ? "Mode position" : "Mode deployment";
+      const subtitle = editMode
+        ? "Cliquez sur la carte pour enregistrer la position de ce capteur."
+        : "Cliquez sur la carte pour positionner le trap.";
+      const confirmLabel = editMode ? "Enregistrer position" : "Confirmer position";
+
       const panel = document.createElement("div");
       panel.style.position = "absolute";
       panel.style.left = "16px";
@@ -777,15 +843,39 @@ Import floor maps
       panel.style.background = "rgba(19,27,46,0.92)";
       panel.style.border = "1px solid rgba(173,198,255,0.28)";
       panel.style.zIndex = "50";
-      panel.style.maxWidth = "280px";
+      panel.style.maxWidth = "320px";
       panel.innerHTML = [
-        '<p style="font-size:12px;font-weight:700;color:#dae2fd;margin:0 0 6px 0;">Mode deployment</p>',
-        '<p style="font-size:11px;color:#c2c6d6;margin:0 0 10px 0;">Cliquez sur la carte pour positionner le trap.</p>',
-        '<button id="confirm-deploy-location" style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:7px 10px;border-radius:9999px;border:0;background:linear-gradient(90deg,#adc6ff,#4d8eff);color:#002e6a;" disabled>Confirmer position</button>'
+        '<p style="font-size:12px;font-weight:700;color:#dae2fd;margin:0 0 6px 0;">' + heading + "</p>",
+        '<p style="font-size:11px;color:#c2c6d6;margin:0 0 10px 0;">' + subtitle + "</p>",
+        '<p style="font-size:10px;color:#8c909f;margin:0 0 10px 0;">Astuce: zoomez / deplacez la carte, puis cliquez. La position enregistree suit exactement la carte.</p>',
+        '<button id="confirm-deploy-location" style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:7px 10px;border-radius:9999px;border:0;background:linear-gradient(90deg,#adc6ff,#4d8eff);color:#002e6a;" disabled>' + confirmLabel + "</button>",
       ].join("");
       mapCanvas.appendChild(panel);
 
       const confirmBtn = panel.querySelector("#confirm-deploy-location");
+
+      const trySeedExisting = () => {
+        if (!editMode) return;
+        const sensors = loadSensors();
+        const s = sensors.find((it) => it && String(it.id || "") === String(editSensorId));
+        const loc = s && s.location && s.location.type === "map" ? s.location : null;
+        if (!loc) return;
+
+        const floorId = normalizeFloorId(loc.floorId || loc.floor);
+        if (!floorId || floorId !== activeFloor) return;
+
+        const x = Number(loc.x);
+        const y = Number(loc.y);
+        if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+
+        selected = { x: Number(x.toFixed(2)), y: Number(y.toFixed(2)) };
+        marker.style.left = `${selected.x}%`;
+        marker.style.top = `${selected.y}%`;
+        marker.style.display = "block";
+        if (confirmBtn) confirmBtn.disabled = false;
+      };
+
+      trySeedExisting();
 
       mapCanvas.addEventListener("click", (event) => {
         if (didPan) {
@@ -795,9 +885,11 @@ Import floor maps
         if (!(event.target instanceof Element)) return;
         if (event.target.closest("button")) return;
 
-        const rect = mapCanvas.getBoundingClientRect();
+        const target = mapContent || mapCanvas;
+        const rect = target.getBoundingClientRect();
         const x = Math.min(100, Math.max(0, ((event.clientX - rect.left) / rect.width) * 100));
         const y = Math.min(100, Math.max(0, ((event.clientY - rect.top) / rect.height) * 100));
+
         selected = { x: Number(x.toFixed(2)), y: Number(y.toFixed(2)) };
         marker.style.left = `${selected.x}%`;
         marker.style.top = `${selected.y}%`;
@@ -805,22 +897,104 @@ Import floor maps
         if (confirmBtn) confirmBtn.disabled = false;
       });
 
+      const dispatchPendingUpdated = () => {
+        try {
+          window.dispatchEvent(new Event("legacy-pending-trap-updated"));
+        } catch {
+          // ignore
+        }
+      };
+
       if (confirmBtn) {
-        confirmBtn.addEventListener("click", () => {
+        confirmBtn.addEventListener("click", async () => {
           if (!selected) return;
+
+          if (editMode) {
+            if (!editSensorId) return;
+            confirmBtn.disabled = true;
+            const previousText = confirmBtn.textContent;
+            confirmBtn.textContent = "Enregistrement...";
+
+            try {
+              const res = await fetch(`/api/legacy/sensors/${encodeURIComponent(String(editSensorId))}/location`, {
+                method: "PATCH",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                  mapFloorId: activeFloor,
+                  mapX: selected.x,
+                  mapY: selected.y,
+                }),
+              });
+
+              if (!res.ok) {
+                const text = await res.text().catch(() => "");
+                throw new Error(text || `Failed to save (${res.status})`);
+              }
+
+              // Keep the legacy map in sync immediately.
+              const sensors = loadSensors();
+              const next = sensors.map((it) => {
+                if (!it || String(it.id || "") !== String(editSensorId)) return it;
+                return {
+                  ...it,
+                  floorId: activeFloor,
+                  location: {
+                    type: "map",
+                    floorId: activeFloor,
+                    floor: activeFloor,
+                    x: selected.x,
+                    y: selected.y,
+                  },
+                };
+              });
+
+              window.localStorage.setItem(sensorsKey, JSON.stringify(next));
+              try {
+                window.dispatchEvent(new Event("legacy-sensors-updated"));
+              } catch {
+                // ignore
+              }
+
+              alert("Position enregistree.");
+            } catch (error) {
+              console.error(error);
+              alert("Erreur: impossible d'enregistrer la position.");
+            } finally {
+              confirmBtn.textContent = previousText || confirmLabel;
+              confirmBtn.disabled = false;
+            }
+
+            return;
+          }
+
+          // Deploy mode: store pending location for the deploy form.
           const payload = {
             trapId: `TRP-${Date.now()}`,
             createdAt: new Date().toISOString(),
             location: {
               type: "map",
               floor: activeFloor,
+              floorId: activeFloor,
               x: selected.x,
               y: selected.y,
             },
           };
           window.localStorage.setItem(pendingTrapKey, JSON.stringify(payload));
-          alert("Position enregistree. Trap pret a etre deploye.");
-          window.location.href = "deploy-trap.html";
+          dispatchPendingUpdated();
+
+          alert("Position enregistree.");
+
+          let embedded = false;
+          try {
+            embedded = Boolean(window.top && window.top !== window);
+          } catch {
+            embedded = true;
+          }
+          if (document.documentElement.classList.contains("embedded")) embedded = true;
+
+          if (!embedded) {
+            window.location.href = "deploy-trap.html";
+          }
         });
       }
     }

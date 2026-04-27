@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Sensor" ADD COLUMN     "mapFloorId" TEXT,
+ADD COLUMN     "mapX" DOUBLE PRECISION,
+ADD COLUMN     "mapY" DOUBLE PRECISION;

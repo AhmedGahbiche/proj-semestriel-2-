@@ -20,11 +20,11 @@ export function FloorMapPreview({ mapUrl, floorLabel, sensorsTotal, sensorsTrigg
         <p className="text-sm text-[var(--on-surface-variant)]">
           Live preview for {floorLabel}. Tracking {sensorsTotal} sensors.
         </p>
-        <GradientPillLink href="/map" variant="compact">
+        <GradientPillLink href="/legacy/plan.html" variant="compact">
           Expand Map View
         </GradientPillLink>
       </div>
-      <Link href="/map" className="relative min-h-64 md:col-span-2">
+      <Link href="/legacy/plan.html" className="relative min-h-64 md:col-span-2">
         <Image
           src={mapUrl}
           alt={`Floor map preview for ${floorLabel}`}

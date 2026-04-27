@@ -1,5 +1,7 @@
-import { LegacyFrame } from "@/components/ui/legacy-frame";
+import { LegacyDashboardHost } from "./legacy-dashboard-host";
+
+export const dynamic = "force-dynamic";
 
 export default function DashboardPage() {
-  return <LegacyFrame page="dashboard.html" title="Lumiere Dashboard" />;
+  return <LegacyDashboardHost />;
 }

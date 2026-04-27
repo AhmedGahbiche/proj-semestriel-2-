@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.dataRoutes = void 0;
+const express_1 = require("express");
+const asyncHandler_1 = require("../utils/asyncHandler");
+const apiKeyAuth_1 = require("../middleware/apiKeyAuth");
+const dataController_1 = require("../controllers/dataController");
+exports.dataRoutes = (0, express_1.Router)();
+exports.dataRoutes.post('/data', apiKeyAuth_1.apiKeyAuth, (0, asyncHandler_1.asyncHandler)(dataController_1.postData));
+exports.dataRoutes.get('/data', apiKeyAuth_1.apiKeyAuth, (0, asyncHandler_1.asyncHandler)(dataController_1.getData));
+exports.dataRoutes.get('/data/:deviceId', apiKeyAuth_1.apiKeyAuth, (0, asyncHandler_1.asyncHandler)(dataController_1.getDataByDevice));

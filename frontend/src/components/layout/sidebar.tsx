@@ -10,6 +10,10 @@ import { GradientPillLink } from "@/components/ui/gradient-pill";
 export function Sidebar() {
   const pathname = usePathname();
 
+  if (pathname === "/dashboard") {
+    return null;
+  }
+
   return (
     <aside className="hidden md:flex md:w-64 md:flex-col border-r border-white/10 bg-[var(--surface-container-low)] p-4">
       <div className="mb-6 flex items-center gap-3 px-2">
@@ -41,7 +45,7 @@ export function Sidebar() {
           );
         })}
       </nav>
-      <GradientPillLink href="/deploy-trap" variant="sidebar" className="mt-auto">
+      <GradientPillLink href="/deploy-trap/connect" variant="sidebar" className="mt-auto">
         <MaterialIcon name="add_circle" className="text-sm" />
         Deploy New Trap
       </GradientPillLink>

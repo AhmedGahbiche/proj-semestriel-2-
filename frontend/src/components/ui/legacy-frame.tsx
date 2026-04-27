@@ -5,9 +5,10 @@ import { useEffect, useMemo, useState } from "react";
 type LegacyFrameProps = {
   page: string;
   title: string;
+  className?: string;
 };
 
-export function LegacyFrame({ page, title }: LegacyFrameProps) {
+export function LegacyFrame({ page, title, className }: LegacyFrameProps) {
   const [hash, setHash] = useState<string>(typeof window === "undefined" ? "" : window.location.hash || "");
 
   useEffect(() => {
@@ -26,7 +27,7 @@ export function LegacyFrame({ page, title }: LegacyFrameProps) {
     <iframe
       src={src}
       title={title}
-      className="h-screen w-screen border-0"
+      className={className ?? "h-screen w-screen border-0"}
       loading="eager"
     />
   );

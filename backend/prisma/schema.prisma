@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ApiKeyScope {
+  ADMIN
+  INGEST
+}
+
+enum SensorStatus {
+  ARMED
+  TRIGGERED
+  LOW_BATTERY
+  OFFLINE
+}
+
+enum EventSeverity {
+  INFO
+  WARN
+  CRITICAL
+}
+
+enum EventType {
+  INGEST
+  ARMED
+  TRIGGERED
+  LOW_BATTERY
+  OFFLINE
+  ONLINE
+}
+
+model ApiKey {
+  id        String      @id @default(cuid())
+  name      String
+  prefix    String
+  hash      String      @unique
+  scope     ApiKeyScope
+  createdAt DateTime    @default(now())
+  revokedAt DateTime?
+}
+
+model Sensor {
+  id             String       @id @default(cuid())
+  trapId         String       @unique
+  deviceId       String?      @unique
+  floorLabel     String?
+  zone           String?
+
+  // Floor-plan map location (percent coordinates inside the current floor image)
+  mapFloorId     String?
+  mapX           Float?
+  mapY           Float?
+
+  status         SensorStatus
+  lastActivityAt DateTime?
+  batteryPct     Int?
+  signalLevel    Int?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  events         Event[]
+  telemetry      TelemetryUplink[]
+}
+
+model Event {
+  id        String        @id @default(cuid())
+  createdAt DateTime      @default(now())
+  type      EventType
+  severity  EventSeverity
+  title     String
+  detail    String?
+
+  sensorId  String?
+  sensor    Sensor?       @relation(fields: [sensorId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([sensorId])
+}
+
+model TelemetryUplink {
+  id         String   @id @default(cuid())
+  receivedAt DateTime
+  gatewayId  String?
+  deviceId   String?
+  trapId     String?
+  rssi       Float?
+  snr        Float?
+  payloadB64 String?
+  decoded    Json?
+
+  sensorId   String?
+  sensor     Sensor?  @relation(fields: [sensorId], references: [id], onDelete: SetNull)
+
+  @@index([receivedAt])
+  @@index([trapId])
+  @@index([sensorId])
+}

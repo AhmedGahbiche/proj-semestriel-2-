@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      # Use the docker network hostname `db`
+      DATABASE_URL: postgresql://app:app@db:5432/app?schema=public
+      # Dev-only bootstrap admin key (change this in real deployments)
+      ADMIN_BOOTSTRAP_KEY: dev-admin-bootstrap-key
+      PORT: 4000
+    ports:
+      - "4000:4000"
+
+volumes:
+  db_data:

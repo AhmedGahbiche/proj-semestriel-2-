@@ -1,13 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useThemeSettings } from "@/components/providers/theme-settings-provider";
 import { topIconLinks } from "@/lib/nav";
 import { MaterialIcon } from "@/components/ui/material-icon";
 import { CircleIconButton, CircleIconLink } from "@/components/ui/circle-icon-action";
 
 export function Topbar() {
+  const pathname = usePathname();
   const { theme, toggleTheme } = useThemeSettings();
+
+  if (pathname === "/dashboard") {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[color:var(--surface)]/90 px-6 backdrop-blur-xl">

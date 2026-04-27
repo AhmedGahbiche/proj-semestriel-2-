@@ -1,5 +1,5 @@
-import { LegacyFrame } from "@/components/ui/legacy-frame";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
-  return <LegacyFrame page="index.html" title="Lumiere Login" />;
+export default function HomePage() {
+  redirect("/dashboard");
 }
